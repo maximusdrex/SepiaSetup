@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "FirstAgentConfig",
+            "request": "launch",
+            "mainClass": "edu.cwru.Sepia.Main2",
+            "args": "data\\FirstAgentConfig.xml",
+            "classPaths": ["${workspaceFolder}\\bin", "${workspaceFolder}\\include\\Sepia.jar"]
+        }
+    ]
+}

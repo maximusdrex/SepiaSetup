@@ -1,0 +1,1 @@
+java -cp ".:./lib/*:./bin" edu.cwru.sepia.Main2 $1
