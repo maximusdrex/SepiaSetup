@@ -370,7 +370,7 @@ public class AstarAgent extends Agent {
             if(isGoal(currentNode, goal)) {
                 return backtrackGoal(currentNode);
             } else {
-                openList.addAll(ValidSuccessors(currentNode, xExtent, yExtent, enemyFootmanLoc, resourceLocations, openList, closedList));
+                openList.addAll(ValidSuccessors(currentNode, goal, xExtent, yExtent, enemyFootmanLoc, resourceLocations, openList, closedList));
             }
         }
 
@@ -389,11 +389,12 @@ public class AstarAgent extends Agent {
      */
     private Stack<MapLocation> backtrackGoal(AstarNode goal_node) {
         Stack<MapLocation> path = new Stack<MapLocation>();
-        AstarNode currentNode = goal_node;
-        while(currentNode.parent != null) {
+        AstarNode currentNode = goal_node.parent;
+        do {
             path.add(currentNode);
             currentNode = currentNode.parent;
-        }
+        } while (currentNode.parent != null);
+
         return path;
     }
 
@@ -409,9 +410,9 @@ public class AstarAgent extends Agent {
      *      
      * @return All new children to be added to the open set are returned in the set
      */
-    private Set<AstarNode> ValidSuccessors(AstarNode node, int xExtent, int yExtent, MapLocation enemyFootmanLocation, Set<MapLocation> resourceLocations, Set<AstarNode> openSet, Set<AstarNode> closedSet) {
+    private Set<AstarNode> ValidSuccessors(AstarNode node, MapLocation goal, int xExtent, int yExtent, MapLocation enemyFootmanLocation, Set<MapLocation> resourceLocations, Set<AstarNode> openSet, Set<AstarNode> closedSet) {
         // generate valid neighbors
-        Set<AstarNode> neighbors = AllNeighbors(node, xExtent, yExtent, enemyFootmanLocation, resourceLocations);
+        Set<AstarNode> neighbors = AllNeighbors(node, goal, xExtent, yExtent, enemyFootmanLocation, resourceLocations);
 
         Set<AstarNode> newOpenNodes = new HashSet<AstarNode>();
         Iterator<AstarNode> neighborIterator = neighbors.iterator();
@@ -446,7 +447,7 @@ public class AstarAgent extends Agent {
         Iterator<AstarNode> it = set.iterator();
         while(it.hasNext()) {
             AstarNode loc = it.next();
-            if (loc.x == node.x && loc.y == node.y) {
+            if (loc != null && loc.x == node.x && loc.y == node.y) {
                 return loc;
             }
         }
@@ -464,7 +465,7 @@ public class AstarAgent extends Agent {
         Iterator<MapLocation> it = set.iterator();
         while(it.hasNext()) {
             MapLocation loc = it.next();
-            if (loc.x == node.x && loc.y == node.y) {
+            if (loc != null && loc.x == node.x && loc.y == node.y) {
                 return loc;
             }
         }
@@ -478,9 +479,11 @@ public class AstarAgent extends Agent {
      * Then calculate its f score
      * @return Returns all neighboring empty spaces as AstarNodes
      */
-    private Set<AstarNode> AllNeighbors(AstarNode node, int xExtent, int yExtent, MapLocation enemyFootmanLocation, Set<MapLocation> resourceLocations) {
+    private Set<AstarNode> AllNeighbors(AstarNode node, MapLocation goal, int xExtent, int yExtent, MapLocation enemyFootmanLocation, Set<MapLocation> resourceLocations) {
         Set<MapLocation> allLocations = new HashSet<MapLocation>();
-        allLocations.add(enemyFootmanLocation);
+        if(enemyFootmanLocation != null) {
+            allLocations.add(enemyFootmanLocation);
+        }
         allLocations.addAll(resourceLocations);
 
         Set<AstarNode> newNeighbors = new HashSet<AstarNode>(Arrays.asList(
@@ -488,12 +491,15 @@ public class AstarAgent extends Agent {
             new AstarNode(node.x - 1, node.y, node, node.g + 1),
             new AstarNode(node.x, node.y + 1, node, node.g + 1),
             new AstarNode(node.x, node.y - 1, node, node.g + 1)));
+
+        // Remove any neighbors which are off the map
+        newNeighbors.removeIf(n -> n.x < 0 || n.y < 0 || n.x >= xExtent || n.y >= yExtent);
         
         // Remove any neighbors which overlap with objects on the map
         newNeighbors.removeIf(n -> isInMap(n, allLocations) != null);
 
         for (AstarNode astarNode : newNeighbors) {
-            astarNode.f = AstarCalcF(astarNode, enemyFootmanLocation);
+            astarNode.f = AstarCalcF(astarNode, goal);
         }
 
         return newNeighbors;
