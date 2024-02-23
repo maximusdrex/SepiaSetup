@@ -479,7 +479,6 @@ public class AstarAgent extends Agent {
      * @return Returns all neighboring empty spaces as AstarNodes
      */
     private Set<AstarNode> AllNeighbors(AstarNode node, int xExtent, int yExtent, MapLocation enemyFootmanLocation, Set<MapLocation> resourceLocations) {
-        //TODO
         Set<MapLocation> allLocations = new HashSet<MapLocation>();
         allLocations.add(enemyFootmanLocation);
         allLocations.addAll(resourceLocations);
