@@ -104,14 +104,14 @@ public class ExampleAgent extends Agent {
                         }
 
                         if (GOLD_COUNT >= farmGoldCost && WOOD_COUNT >= farmWoodCost) {
-                            logger.fine("Building farm");
                             Integer[] loc = {unitView.getXPosition() + 1, unitView.getYPosition() + 1};
                             while (!checkLoc(loc[0], loc[1], allLocations)) {
+                                logger.fine("Location " + loc[0].toString() + ", " + loc[1].toString() + " is full");
                                 loc[0] += 1;
                                 loc[1] += 1;
                             }
                             actions.put(uID, Action.createCompoundBuild(uID, farmTemplateID, loc[0], loc[1]));
-                            logger.fine("Building farm at " + loc[0] + ", " + loc[1]);
+                            //logger.fine("Building farm at " + loc[0] + ", " + loc[1]);
                         } else if (GOLD_COUNT < WOOD_COUNT && closestGold != null) {
                             actions.put(uID, Action.createCompoundGather(uID, closestGold.getID()));
                         } else if (closestWood != null) {

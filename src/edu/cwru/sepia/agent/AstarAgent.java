@@ -222,6 +222,9 @@ public class AstarAgent extends Agent {
     private boolean shouldReplanPath(State.StateView state, History.HistoryView history, Stack<MapLocation> currentPath)
     {
         UnitView enemy = state.getUnit(enemyFootmanID);
+        if (enemy == null) {
+            return false;
+        }
         MapLocation enemyLoc = new MapLocation(enemy.getXPosition(), enemy.getYPosition(), null, 0);
         return isInMap(enemyLoc, currentPath) != null;
     }
