@@ -377,6 +377,12 @@ public class AstarAgent extends Agent {
             }
         }
 
+        // If no path available, but an original plan was already made, then footman is in the way
+        // If this is the case proceed forward anyways
+        if(this.path != null) {
+            return this.path;
+        }
+
         // No possible path available
         System.out.println("No available path.");
         // Exit with code 0 (no error)
@@ -485,7 +491,7 @@ public class AstarAgent extends Agent {
     private Set<AstarNode> AllNeighbors(AstarNode node, MapLocation goal, int xExtent, int yExtent, MapLocation enemyFootmanLocation, Set<MapLocation> resourceLocations) {
         
         Set<MapLocation> allLocations = new HashSet<MapLocation>();
-        if(enemyFootmanLocation != null) {
+        if(enemyFootmanLocation != null && this.path != null) {
             allLocations.add(enemyFootmanLocation);
         }
         allLocations.addAll(resourceLocations);
