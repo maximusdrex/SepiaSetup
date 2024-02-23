@@ -5,6 +5,7 @@ import edu.cwru.sepia.environment.model.history.History;
 import edu.cwru.sepia.environment.model.state.ResourceNode;
 import edu.cwru.sepia.environment.model.state.State;
 import edu.cwru.sepia.environment.model.state.Unit;
+import edu.cwru.sepia.environment.model.state.Unit.UnitView;
 import edu.cwru.sepia.util.Direction;
 import javafx.collections.MapChangeListener;
 
@@ -220,7 +221,9 @@ public class AstarAgent extends Agent {
      */
     private boolean shouldReplanPath(State.StateView state, History.HistoryView history, Stack<MapLocation> currentPath)
     {
-        return false;
+        UnitView enemy = state.getUnit(enemyFootmanID);
+        MapLocation enemyLoc = new MapLocation(enemy.getXPosition(), enemy.getYPosition(), null, 0);
+        return isInMap(enemyLoc, currentPath) != null;
     }
 
     /**
@@ -443,7 +446,7 @@ public class AstarAgent extends Agent {
      * @param node Node which may exist in set already
      * @return AstarNode node in set
      */
-    private AstarNode isIn(AstarNode node, Set<AstarNode> set) {
+    private AstarNode isIn(AstarNode node, Collection<AstarNode> set) {
         Iterator<AstarNode> it = set.iterator();
         while(it.hasNext()) {
             AstarNode loc = it.next();
@@ -461,7 +464,7 @@ public class AstarAgent extends Agent {
      * @param set
      * @return
      */
-    private MapLocation isInMap(AstarNode node, Set<MapLocation> set) {
+    private MapLocation isInMap(MapLocation node, Collection<MapLocation> set) {
         Iterator<MapLocation> it = set.iterator();
         while(it.hasNext()) {
             MapLocation loc = it.next();
@@ -480,11 +483,13 @@ public class AstarAgent extends Agent {
      * @return Returns all neighboring empty spaces as AstarNodes
      */
     private Set<AstarNode> AllNeighbors(AstarNode node, MapLocation goal, int xExtent, int yExtent, MapLocation enemyFootmanLocation, Set<MapLocation> resourceLocations) {
+        
         Set<MapLocation> allLocations = new HashSet<MapLocation>();
         if(enemyFootmanLocation != null) {
             allLocations.add(enemyFootmanLocation);
         }
         allLocations.addAll(resourceLocations);
+        
 
         Set<AstarNode> newNeighbors = new HashSet<AstarNode>(Arrays.asList(
             new AstarNode(node.x + 1, node.y, node, node.g + 1),
