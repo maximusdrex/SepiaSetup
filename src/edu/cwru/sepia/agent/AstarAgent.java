@@ -33,6 +33,8 @@ public class AstarAgent extends Agent {
     int footmanID, townhallID, enemyFootmanID;
     MapLocation nextLoc;
 
+    private static final float replanCost = 3;
+
     private long totalPlanTime = 0; // nsecs
     private long totalExecutionTime = 0; //nsecs
 
@@ -221,12 +223,21 @@ public class AstarAgent extends Agent {
      */
     private boolean shouldReplanPath(State.StateView state, History.HistoryView history, Stack<MapLocation> currentPath)
     {
-        UnitView enemy = state.getUnit(enemyFootmanID);
+        // First check to make sure an enemy exists (it won't be necessary to replan if the environment is static)
+        UnitView enemy = state.getUnit(this.enemyFootmanID);
+        
         if (enemy == null) {
             return false;
         }
+
+        UnitView currUnitView = state.getUnit(this.footmanID);
+
+        // Convert the unit views into MapLocation objects
         MapLocation enemyLoc = new MapLocation(enemy.getXPosition(), enemy.getYPosition(), null, 0);
-        return isInMap(enemyLoc, currentPath) != null;
+        MapLocation unitLoc = new MapLocation(currUnitView.getXPosition(), currUnitView.getYPosition(), null, 0);
+
+        // Replan only if enemy in path and h(unit, enemy) < replanCost
+        return isIn(enemyLoc, currentPath) != null && AstarHeuristic(unitLoc, enemyLoc) < replanCost;
     }
 
     /**
@@ -450,40 +461,23 @@ public class AstarAgent extends Agent {
     }
 
     /**
-     * If the location of node is the location of one of the nodes in AstarNode
+     * If the location of node is the location of one of the nodes in MapLocation
      * return that node, else return null
+     * Function is generic so it will return AstarNode when called on AstarNodes
+     * or MapLocation when MapLocations are used
      * @param node Node which may exist in set already
-     * @return AstarNode node in set
+     * @return Maplocation subtype of node in set
      */
-    private AstarNode isIn(AstarNode node, Collection<AstarNode> set) {
-        Iterator<AstarNode> it = set.iterator();
+    private <T extends MapLocation> T isIn(T node, Collection<T> set) {
+        Iterator<T> it = set.iterator();
         while(it.hasNext()) {
-            AstarNode loc = it.next();
+            T loc = it.next();
             if (loc != null && loc.x == node.x && loc.y == node.y) {
                 return loc;
             }
         }
         return null;
     }
-
-
-    /**
-     * Same as isIn except returns MapLocations only
-     * @param node
-     * @param set
-     * @return
-     */
-    private MapLocation isInMap(MapLocation node, Collection<MapLocation> set) {
-        Iterator<MapLocation> it = set.iterator();
-        while(it.hasNext()) {
-            MapLocation loc = it.next();
-            if (loc != null && loc.x == node.x && loc.y == node.y) {
-                return loc;
-            }
-        }
-        return null;
-    }
-
 
     /**
      * Generate all empty neighboring spaces
@@ -493,13 +487,18 @@ public class AstarAgent extends Agent {
      */
     private Set<AstarNode> AllNeighbors(AstarNode node, MapLocation goal, int xExtent, int yExtent, MapLocation enemyFootmanLocation, Set<MapLocation> resourceLocations) {
         
-        Set<MapLocation> allLocations = new HashSet<MapLocation>();
+        // Create a new set of both the enemy and the resource only if replanning the path is necessary
+        // Else just use the resourceLocations
+        Set<MapLocation> allLocations;
         if(enemyFootmanLocation != null && this.path != null) {
+            allLocations = new HashSet<MapLocation>();
             allLocations.add(enemyFootmanLocation);
+            allLocations.addAll(resourceLocations);
+        } else {
+            allLocations = resourceLocations;
         }
-        allLocations.addAll(resourceLocations);
-        
 
+        // Create all possible neighbors
         Set<AstarNode> newNeighbors = new HashSet<AstarNode>(Arrays.asList(
             new AstarNode(node.x + 1, node.y, node, node.g + 1),
             new AstarNode(node.x - 1, node.y, node, node.g + 1),
@@ -510,7 +509,7 @@ public class AstarAgent extends Agent {
         newNeighbors.removeIf(n -> n.x < 0 || n.y < 0 || n.x >= xExtent || n.y >= yExtent);
         
         // Remove any neighbors which overlap with objects on the map
-        newNeighbors.removeIf(n -> isInMap(n, allLocations) != null);
+        newNeighbors.removeIf(n -> isIn(n, allLocations) != null);
 
         for (AstarNode astarNode : newNeighbors) {
             astarNode.f = AstarCalcF(astarNode, goal);
@@ -539,7 +538,7 @@ public class AstarAgent extends Agent {
      * @param node the map location being examined
      * @return Returns the heuristic calculated for the node
      */
-    private float AstarHeuristic(AstarNode node, MapLocation goal) {
+    private float AstarHeuristic(MapLocation node, MapLocation goal) {
         // Return Chebyshev distance
         return Math.max(Math.abs(goal.x - node.x), Math.abs(goal.x - node.x));
     }

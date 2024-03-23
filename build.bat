@@ -1,1 +1,1 @@
-javac -cp .;lib\* -d bin src\*.java
+javac -g -cp .;lib\* -d out src\edu\cwru\sepia\agent\*.java

@@ -2,11 +2,11 @@
     "configurations": [
         {
             "type": "java",
-            "name": "AstarAgentConfig",
+            "name": "AgentConfig",
             "request": "launch",
             "mainClass": "edu.cwru.sepia.Main2",
-            "args": "data/maze_8x8_config.xml",
-            "classPaths": ["${workspaceFolder}/lib/Sepia.jar", "${workspaceFolder}/bin"]
+            "args": "data/GameConfig2fv2a.xml",
+            "classPaths": ["${workspaceFolder}/lib/Sepia.jar", "${workspaceFolder}/bin", "${workspaceFolder}/src"]
         }
     ]
 }
