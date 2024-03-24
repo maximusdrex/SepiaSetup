@@ -134,6 +134,9 @@ public class MinimaxAlphaBeta extends Agent {
     public List<GameStateChild> orderChildrenWithHeuristics(List<GameStateChild> children)
     {
         //TODO
+        // Sorting in descending order of utility scores.
+        // Provides pruning efficiency by sorting in descending order
+        Collections.sort(children, (child1, child2) -> Double.compare(child2.state.getUtility(), child1.state.getUtility()));
         return children;
     }
 }
