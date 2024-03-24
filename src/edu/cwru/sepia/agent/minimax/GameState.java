@@ -197,25 +197,25 @@ public class GameState {
     }
 
     // TODO FIX
-    public List<Map<Integer, Action>> getCombinations(List<List<Map<Integer, Action>>> actionsList) {
+   public List<Map<Integer, Action>> getCombinations(List<List<Map<Integer, Action>>> actionsList) {
         List<Map<Integer, Action>> combinations = new ArrayList<>();
-        generateCombinations(actionsList, new HashMap<>(), 0);
+        // Pass the combinations list to the recursive function
+        generateCombinations(actionsList, new HashMap<>(), 0, combinations);
         return combinations;
     }
-
-    // TODO FIX
-    private void generateCombinations(List<List<Map<Integer, Action>>> actionsList, Map<Integer, Action> currentCombination, int index) {
+    //TODO FIX
+    private void generateCombinations(List<List<Map<Integer, Action>>> actionsList, Map<Integer, Action> currentCombination, int index, List<Map<Integer, Action>> combinations) {
         if (index == actionsList.size()) {
-            Map<Integer, Action> mergedMap = mergeMaps(currentCombination);
-            combinations.add(mergedMap);
+            // Directly add the currentCombination map since it's already a merged map of actions
+            combinations.add(new HashMap<>(currentCombination)); // Make a copy to avoid overwriting
             return;
         }
 
         List<Map<Integer, Action>> currentList = actionsList.get(index);
         for (Map<Integer, Action> map : currentList) {
             Map<Integer, Action> newCombination = new HashMap<>(currentCombination);
-            newCombination.putAll(map);
-            generateCombinations(actionsList, newCombination, index + 1);
+            newCombination.putAll(map); // Merge the current map of actions into the new combination
+            generateCombinations(actionsList, newCombination, index + 1, combinations);
         }
     }
 
