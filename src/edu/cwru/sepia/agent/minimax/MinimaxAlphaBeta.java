@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MinimaxAlphaBeta extends Agent {
 
@@ -118,6 +119,20 @@ public class MinimaxAlphaBeta extends Agent {
         return returnChild;
     }
 
+    
+
+    private class SortDistance implements Comparator<GameStateChild> {
+ 
+        // Method
+        // Sorting in ascending order of roll number
+        public int compare(GameStateChild a, GameStateChild b)
+        {
+    
+            return (int) a.state.playerUnits.stream().mapToDouble(x -> a.state.enemyUnits.stream().mapToDouble(y -> a.state.distanceBetween(x.location, y.location)).min().orElse(Double.NEGATIVE_INFINITY)).sum() -
+                (int) b.state.playerUnits.stream().mapToDouble(x -> b.state.enemyUnits.stream().mapToDouble(y -> a.state.distanceBetween(x.location, y.location)).min().orElse(Double.NEGATIVE_INFINITY)).sum();
+        }
+    }
+
     /**
      * You will implement this.
      *
@@ -133,21 +148,7 @@ public class MinimaxAlphaBeta extends Agent {
      */
     public List<GameStateChild> orderChildrenWithHeuristics(List<GameStateChild> children)
     {
-        //TODO
 
-        //children.stream().sorted(null)
-        return children;
-    }
-
-    class SortDistance implements Comparator<GameStateChild> {
- 
-        // Method
-        // Sorting in ascending order of roll number
-        public int compare(GameStateChild a, GameStateChild b)
-        {
-    
-            return (int) a.state.playerUnits.stream().mapToDouble(x -> a.state.enemyUnits.stream().mapToDouble(y -> a.state.distanceBetween(x.location, y.location)).min().orElse(Double.NEGATIVE_INFINITY)).sum() -
-                (int) b.state.playerUnits.stream().mapToDouble(x -> b.state.enemyUnits.stream().mapToDouble(y -> a.state.distanceBetween(x.location, y.location)).min().orElse(Double.NEGATIVE_INFINITY)).sum();
-        }
+        return children.stream().sorted(new SortDistance()).collect(Collectors.toList());
     }
 }
