@@ -7,6 +7,7 @@ import edu.cwru.sepia.environment.model.state.State;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -77,45 +78,44 @@ public class MinimaxAlphaBeta extends Agent {
         // Approximate algorithm: Start with minimax
         // Recursively enumerate all possible game states and their minimax values
         // Each iteration will run both min and max nodes
-        // TODO: Change some of this
 
         if (depth == 0) {
             return node;
         }
 
-        GameStateChild ret = null;
+        GameStateChild returnChild = null;
 
         if (numPlys % 2 == depth % 2) {
-            double v = Double.NEGATIVE_INFINITY;
+            double u = Double.NEGATIVE_INFINITY;
             for (GameStateChild child : orderChildrenWithHeuristics(node.state.getChildren(true))) {
                 double childUtility = alphaBetaSearch(child, depth - 1, alpha, beta).state.getUtility();
-                if (childUtility > v) {
-                    v = childUtility;
-                    ret = child;
+                if (childUtility > u) {
+                    u = childUtility;
+                    returnChild = child;
                 }
-                if (v >= beta) {
+                if (u >= beta) {
                     break;
                 } else {
-                    alpha = Math.max(v, alpha);
+                    alpha = Math.max(u, alpha);
                 }
             }
         } else {
-            double v = Double.POSITIVE_INFINITY;
+            double u = Double.POSITIVE_INFINITY;
             for (GameStateChild child : orderChildrenWithHeuristics(node.state.getChildren(false))) {
                 double childUtility = alphaBetaSearch(child, depth - 1, alpha, beta).state.getUtility();
-                if (childUtility < v) {
-                    v = childUtility;
-                    ret = child;
+                if (childUtility < u) {
+                    u = childUtility;
+                    returnChild = child;
                 }
-                if (v <= alpha) {
+                if (u <= alpha) {
                     break;
                 } else {
-                    beta = Math.min(v, beta);
+                    beta = Math.min(u, beta);
                 }
             }
         }
 
-        return ret;
+        return returnChild;
     }
 
     /**
@@ -134,6 +134,20 @@ public class MinimaxAlphaBeta extends Agent {
     public List<GameStateChild> orderChildrenWithHeuristics(List<GameStateChild> children)
     {
         //TODO
+
+        //children.stream().sorted(null)
         return children;
+    }
+
+    class SortDistance implements Comparator<GameStateChild> {
+ 
+        // Method
+        // Sorting in ascending order of roll number
+        public int compare(GameStateChild a, GameStateChild b)
+        {
+    
+            return (int) a.state.playerUnits.stream().mapToDouble(x -> a.state.enemyUnits.stream().mapToDouble(y -> a.state.distanceBetween(x.location, y.location)).min().orElse(Double.NEGATIVE_INFINITY)).sum() -
+                (int) b.state.playerUnits.stream().mapToDouble(x -> b.state.enemyUnits.stream().mapToDouble(y -> a.state.distanceBetween(x.location, y.location)).min().orElse(Double.NEGATIVE_INFINITY)).sum();
+        }
     }
 }

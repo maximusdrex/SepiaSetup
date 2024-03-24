@@ -13,6 +13,7 @@ import edu.cwru.sepia.environment.model.state.Unit;
 import edu.cwru.sepia.util.Direction;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -63,12 +64,7 @@ public class GameState {
         // attacks are valid for archers
         @Override
         public Boolean validAttack(GameState state, StateUnit enemy) {
-            for(Direction d : Direction.values()) {
-                if(new StateLocation(this.location, d).equals(enemy.location)) {
-                    return true;
-                }
-            }
-            return false;
+            return true;
         }
     }
 
@@ -140,8 +136,21 @@ public class GameState {
      * @return The weighted linear combination of the features
      */
     public double getUtility() {
-        //TODO
-        return 0.0;
+        double playerHP = this.playerUnits.stream().mapToDouble(x -> (double) x.hp).sum();
+        double enemyHP = this.enemyUnits.stream().mapToDouble(x -> (double) x.hp).sum();
+
+        double numFootmen = (double) this.playerUnits.stream().count();
+        double numEnemy = (double) this.enemyUnits.stream().count();
+
+        double averageDistance = this.playerUnits.stream()
+                .mapToDouble(x -> this.enemyUnits.stream().mapToDouble(y -> distanceBetween(x.location, y.location)).min().orElse(Double.NEGATIVE_INFINITY))
+                .sum() / ((numFootmen > 0 && numEnemy > 0) ? numFootmen : 1);
+
+        return (1 * playerHP) + (-2 * enemyHP) + (2 * numFootmen) + (-2 * numEnemy) + ((-1 / 2) * averageDistance);
+    }
+
+    public double distanceBetween(StateLocation x, StateLocation y) {
+        return Math.sqrt(Math.pow(y.x - x.x, 2) + Math.pow(y.y - x.y, 2));
     }
 
     /**
@@ -186,37 +195,44 @@ public class GameState {
         // If player true, then MAX node and footmen are moving
     
         if(player) {
-            List<List<Map<Integer, Action>>> allactions = playerUnits.stream().map(x -> x.validActions(this, enemyUnits)).collect(Collectors.toList());
+            List<List<Map<Integer, Action>>> allactions = this.playerUnits.stream().map(x -> x.validActions(this, this.enemyUnits)).collect(Collectors.toList());
             List<Map<Integer, Action>> combinations = getCombinations(allactions);
             return combinations.stream().map(x -> new GameStateChild(x, new GameState(this, x))).collect(Collectors.toList());
         } else {
-            List<List<Map<Integer, Action>>> allactions = enemyUnits.stream().map(x -> x.validActions(this, playerUnits)).collect(Collectors.toList());
+            List<List<Map<Integer, Action>>> allactions = this.enemyUnits.stream().map(x -> x.validActions(this, this.playerUnits)).collect(Collectors.toList());
             List<Map<Integer, Action>> combinations = getCombinations(allactions);
             return combinations.stream().map(x -> new GameStateChild(x, new GameState(this, x))).collect(Collectors.toList());
         }
     }
 
-    // TODO FIX
-   public List<Map<Integer, Action>> getCombinations(List<List<Map<Integer, Action>>> actionsList) {
-        List<Map<Integer, Action>> combinations = new ArrayList<>();
-        // Pass the combinations list to the recursive function
-        generateCombinations(actionsList, new HashMap<>(), 0, combinations);
-        return combinations;
+    private List<Map<Integer, Action>> getCombinations(List<List<Map<Integer, Action>>> actions) {
+        List<List<Map<Integer, Action>>> combinations = generateCombinations(actions, new ArrayList<>(), 0);
+        return combinations.stream().map(x -> mergeMaps(x)).collect(Collectors.toList());
     }
-    //TODO FIX
-    private void generateCombinations(List<List<Map<Integer, Action>>> actionsList, Map<Integer, Action> currentCombination, int index, List<Map<Integer, Action>> combinations) {
-        if (index == actionsList.size()) {
-            // Directly add the currentCombination map since it's already a merged map of actions
-            combinations.add(new HashMap<>(currentCombination)); // Make a copy to avoid overwriting
-            return;
+
+    private <T> List<List<T>> generateCombinations(List<List<T>> input, List<List<T>> output, int index) {
+        if(index >= input.size()) {
+            return output;
         }
 
-        List<Map<Integer, Action>> currentList = actionsList.get(index);
-        for (Map<Integer, Action> map : currentList) {
-            Map<Integer, Action> newCombination = new HashMap<>(currentCombination);
-            newCombination.putAll(map); // Merge the current map of actions into the new combination
-            generateCombinations(actionsList, newCombination, index + 1, combinations);
+        List<List<T>> newOut = new ArrayList<>();
+        if(output.size() == 0) {
+            for(T t : input.get(index)) {
+                List<T> element = new ArrayList<>();
+                element.add(t);
+                newOut.add(element);
+            }
+        } else {
+            for(List<T> oldList : output) {
+                for(T t : input.get(index)) {
+                    List<T> element = new ArrayList<>(oldList);
+                    element.add(t);
+                    newOut.add(element);
+                }
+            }
         }
+
+        return generateCombinations(input, newOut, index + 1);
     }
 
     private Map<Integer, Action> mergeMaps(List<Map<Integer, Action>> map) {
