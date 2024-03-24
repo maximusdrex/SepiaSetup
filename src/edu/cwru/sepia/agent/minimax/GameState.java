@@ -140,8 +140,24 @@ public class GameState {
      * @return The weighted linear combination of the features
      */
     public double getUtility() {
-        //TODO
-        return 0.0;
+        //TODO FIX, I added an outline but not sure if this is what you want here
+        // We would need methods for each variables (calculateTotalHP), I didn't look to see if these already existed though
+         // Feature 1: Health Points (HP) of friendly units
+        double hpWeight = 0.5; // Adjust the weight based on importance
+        double totalFriendlyHP = calculateTotalHP(friendlyUnits);
+        utility += hpWeight * totalFriendlyHP;
+    
+        // Feature 2: Distance to objective (e.g., enemy base, strategic location)
+        double distanceWeight = -0.3; // Negative as shorter distances are better
+        double distanceToObjective = calculateAverageDistanceToObjective(friendlyUnits, objectiveLocation);
+        utility += distanceWeight * distanceToObjective;
+    
+        // Feature 3: Number of enemy units in range
+        double enemyInRangeWeight = 0.4;
+        double enemiesInRange = countEnemiesInRange(friendlyUnits);
+        utility += enemyInRangeWeight * enemiesInRange;
+
+        return utility;
     }
 
     /**
