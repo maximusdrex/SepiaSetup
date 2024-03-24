@@ -140,8 +140,33 @@ public class GameState {
      * @return The weighted linear combination of the features
      */
     public double getUtility() {
-        //TODO
-        return 0.0;
+        //TODO FIX.2 Another possibility, will need to implement methods
+        double utility = 0.0;
+
+        // Weights for each feature
+        double healthWeight = 0.4;
+        double positionalAdvantageWeight = 0.2;
+        double unitCountWeight = 0.3;
+        double engagementPotentialWeight = 0.1;
+    
+        // Feature 1: Health
+        double friendlyHealth = playerUnits.stream().mapToDouble(u -> u.hp).sum();
+        double enemyHealth = enemyUnits.stream().mapToDouble(u -> u.hp).sum();
+        utility += healthWeight * (friendlyHealth - enemyHealth);
+    
+        // Feature 2: Positional Advantage
+        double positionalAdvantage = calculatePositionalAdvantage(playerUnits) - calculatePositionalAdvantage(enemyUnits);
+        utility += positionalAdvantageWeight * positionalAdvantage;
+    
+        // Feature 3: Unit Count
+        double unitCountDifference = playerUnits.size() - enemyUnits.size();
+        utility += unitCountWeight * unitCountDifference;
+    
+        // Feature 4: Engagement Potential
+        double engagementPotential = calculateEngagementPotential(playerUnits, enemyUnits);
+        utility += engagementPotentialWeight * engagementPotential;
+    
+        return utility;
     }
 
     /**
