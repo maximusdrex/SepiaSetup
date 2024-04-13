@@ -68,4 +68,5 @@ public class StateLocation {
         StateLocation other = (StateLocation) o;
         return other.x == this.x && other.y == this.y;
     }
+
 }
