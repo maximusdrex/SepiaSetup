@@ -36,8 +36,8 @@ public class StateRepresentation {
 
     public int cost;
 
-    private List<Peasant> peasants;
-    private List<ResourceState> resources;
+    public List<Peasant> peasants;
+    public List<ResourceState> resources;
     private TownHall townHall;
 
     public StateRepresentation(StateView state, int playernum, int requiredGold, int requiredWood, boolean buildPeasants) {
@@ -126,10 +126,10 @@ public class StateRepresentation {
         List<StripsAction> possible_moves = new ArrayList<StripsAction>();
         if(p.currentCargo > 0) {
             possible_moves.addAll(generateDeposits(p));
-            possible_moves.addAll(generateTownHallMoves(p));
+            if(possible_moves.isEmpty()) possible_moves.addAll(generateTownHallMoves(p));
         } else {
             possible_moves.addAll(generateGathers(p));
-            possible_moves.addAll(generateResourceMoves(p));
+            if(possible_moves.isEmpty()) possible_moves.addAll(generateResourceMoves(p));
         }
         return possible_moves;
     }
@@ -138,11 +138,13 @@ public class StateRepresentation {
         List<Position> possible_moves = new ArrayList<Position>();
         // Generate moves for each resource type
         for(ResourceType t : ResourceType.values()) {
-            Position resource_pos = closestResource(p, t).getPosition();
-            List<Position> adj_pos = resource_pos.getEmptyAdjacentPositions(getAllObjectPositions());
-            Comparator<Position> comp = new Position.CompPositions(p.getPosition());
-            // Add the closest position to the list
-            adj_pos.stream().min(comp).ifPresent(x -> possible_moves.add(x));
+            if((t == ResourceType.GOLD && collectedGold < requiredGold) || (t == ResourceType.WOOD && collectedWood < requiredWood)) {
+                Position resource_pos = closestResource(p, t).getPosition();
+                List<Position> adj_pos = resource_pos.getEmptyAdjacentPositions(getAllObjectPositions());
+                Comparator<Position> comp = new Position.CompPositions(p.getPosition());
+                // Add the closest position to the list
+                adj_pos.stream().min(comp).ifPresent(x -> possible_moves.add(x));
+            }
         }
 
         return possible_moves.stream().map(x -> new CompoundMoveAction(p.getID(), x)).collect(Collectors.toList());

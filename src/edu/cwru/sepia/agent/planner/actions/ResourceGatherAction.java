@@ -44,6 +44,10 @@ public class ResourceGatherAction implements StripsAction{
             r.amountRemaining = 0;
         }
 
+        if(r.amountRemaining == 0){
+            new_state.representation.resources.remove(r);
+        }
+
         new_state.representation.cost += approx_cost;
 
         return new_state;
