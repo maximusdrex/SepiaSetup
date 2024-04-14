@@ -40,7 +40,7 @@ public class GameState implements Comparable<GameState> {
 
     private GameState parent;
     private StripsAction action;
-    private StateRepresentation representation;
+    public StateRepresentation representation;
 
     /**
      * Construct a GameState from a stateview object. This is used to construct the initial search node. All other

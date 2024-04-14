@@ -3,6 +3,7 @@ package edu.cwru.sepia.agent.planner;
 import edu.cwru.sepia.util.Direction;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -224,4 +225,15 @@ public class Position {
     public String toString() {
         return "(" + x + ", " + y + ")";
     }
+
+    public static class CompPositions implements Comparator<Position> {
+        Position init_pos;
+        public CompPositions(Position init_pos) {
+            this.init_pos = init_pos;
+        }
+
+        public int compare(Position p1, Position p2) {
+            return Double.compare(init_pos.euclideanDistance(p1), init_pos.euclideanDistance(p2));
+        }
+    } 
 }
