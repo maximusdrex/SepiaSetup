@@ -4,6 +4,8 @@ import edu.cwru.sepia.agent.planner.actions.StripsAction;
 import edu.cwru.sepia.environment.model.state.State;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to represent the state of the game after applying one of the avaiable actions. It will also
@@ -58,6 +60,7 @@ public class GameState implements Comparable<GameState> {
     public GameState(GameState parent, StripsAction action) {
         this.parent = parent;
         this.action = action;
+        this.representation = new StateRepresentation(parent.representation);
     }
 
     /**
@@ -85,7 +88,8 @@ public class GameState implements Comparable<GameState> {
         // Then generate any possible resource gathers
         // Then generate any possible deposits
 
-        return null;
+        // For all StripsActions apply them to get the new game states
+        return representation.generateActions().stream().map(action -> action.apply(this)).collect(Collectors.toList());
     }
 
     /**
@@ -98,7 +102,7 @@ public class GameState implements Comparable<GameState> {
      */
     public double heuristic() {
         // TODO: Implement me!
-        return 0.0;
+        return (representation.requiredGold - representation.collectedGold) + (representation.requiredWood - representation.collectedWood);
     }
 
     /**
@@ -109,8 +113,7 @@ public class GameState implements Comparable<GameState> {
      * @return The current cost to reach this goal
      */
     public double getCost() {
-        // TODO: Implement me!
-        return 0.0;
+        return representation.cost;
     }
 
     /**
@@ -122,8 +125,13 @@ public class GameState implements Comparable<GameState> {
      */
     @Override
     public int compareTo(GameState o) {
-        // TODO: Implement me!
-        return 0;
+        if(this.getCost() > o.getCost()) {
+            return 1;
+        } else if(this.getCost() == o.getCost()) {
+            return 0;
+        } else{
+            return -1;
+        }
     }
 
     /**
@@ -134,8 +142,7 @@ public class GameState implements Comparable<GameState> {
      */
     @Override
     public boolean equals(Object o) {
-        // TODO: Implement me!
-        return false;
+        return representation.equals(((GameState) o).representation);
     }
 
     /**
@@ -146,8 +153,7 @@ public class GameState implements Comparable<GameState> {
      */
     @Override
     public int hashCode() {
-        // TODO: Implement me!
-        return 0;
+        return representation.hashCode();
     }
 
     /**

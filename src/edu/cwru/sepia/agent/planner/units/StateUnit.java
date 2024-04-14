@@ -46,4 +46,13 @@ public abstract class StateUnit {
     public int getID() {
         return this.id;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o.getClass() == this.getClass()){
+            StateUnit cmp = (StateUnit) o;
+            return this.id == cmp.id && this.pos == cmp.pos;
+        }
+        return false;
+    }
 }

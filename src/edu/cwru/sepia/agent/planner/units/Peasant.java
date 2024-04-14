@@ -25,4 +25,13 @@ public class Peasant extends StateUnit {
         gatherCost.put(ResourceType.WOOD, unit.getTemplateView().getDurationGatherWood());
         depositCost = unit.getTemplateView().getDurationDeposit();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o.getClass() == this.getClass()){
+            Peasant cmp = (Peasant) o;
+            return this.id == cmp.id && this.pos == cmp.pos && this.currentCargo == cmp.currentCargo && (this.cargoType == cmp.cargoType || this.currentCargo == 0);
+        }
+        return false;
+    }
 }

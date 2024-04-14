@@ -3,6 +3,8 @@ package edu.cwru.sepia.agent.planner.actions;
 import edu.cwru.sepia.agent.planner.GameState;
 import edu.cwru.sepia.agent.planner.Position;
 import edu.cwru.sepia.agent.planner.units.Peasant;
+import edu.cwru.sepia.agent.planner.units.ResourceState;
+import edu.cwru.sepia.environment.model.state.ResourceType;
 
 public class ResourceGatherAction implements StripsAction{
     private int p_id;
@@ -21,6 +23,29 @@ public class ResourceGatherAction implements StripsAction{
             return p.getPosition().isAdjacent(
                 state.representation.getResourceByID(this.r_id).getPosition());
         }
+    }
+
+    public GameState apply(GameState state) {
+        GameState new_state = new GameState(state, this);
+
+        Peasant unit = new_state.representation.getPeasantByID(this.p_id);
+        ResourceState r = new_state.representation.getResourceByID(this.r_id);
+
+        ResourceType t = r.nodeType;
+        double approx_cost = unit.gatherCost.get(t);
+
+        unit.cargoType = t;
+        if(r.amountRemaining >= 100) {
+            r.amountRemaining -= 100;
+            unit.currentCargo += 100;
+        } else {
+            unit.currentCargo += r.amountRemaining;
+            r.amountRemaining = 0;
+        }
+
+        new_state.representation.cost += approx_cost;
+
+        return new_state;
     }
 
 }

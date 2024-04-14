@@ -2,12 +2,13 @@ package edu.cwru.sepia.agent.planner.actions;
 
 import edu.cwru.sepia.agent.planner.GameState;
 import edu.cwru.sepia.agent.planner.units.Peasant;
+import edu.cwru.sepia.environment.model.state.ResourceType;
 
 public class ResourceDepositAction implements StripsAction{
     private int p_id;
     private int t_id;
 
-    public ResourceGatherAction(int peasantID, int targetID) {
+    public ResourceDepositAction(int peasantID, int targetID) {
         this.p_id = peasantID;
         this.t_id = targetID;
     }
@@ -25,10 +26,15 @@ public class ResourceDepositAction implements StripsAction{
     public GameState apply(GameState state) {
         GameState new_state = new GameState(state, this);
 
-        Peasant unit = new_state.representation.getPeasantByID(this.id);
-        double approx_cost = unit.getPosition().euclideanDistance(this.dest) * unit.moveCost;
+        Peasant unit = new_state.representation.getPeasantByID(this.p_id);
+        double approx_cost = unit.depositCost;
 
-        unit.setPosition(dest);
+        if(unit.cargoType == ResourceType.GOLD) {
+            new_state.representation.collectedGold += unit.currentCargo;
+        } else {
+            new_state.representation.collectedWood += unit.currentCargo;
+        }
+        unit.currentCargo = 0;
         new_state.representation.cost += approx_cost;
 
         return new_state;

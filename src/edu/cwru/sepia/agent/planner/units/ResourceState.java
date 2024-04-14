@@ -22,4 +22,13 @@ public class ResourceState extends StateUnit {
         }
         this.amountRemaining = unit.getAmountRemaining();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o.getClass() == this.getClass()){
+            ResourceState cmp = (ResourceState) o;
+            return this.id == cmp.id && this.pos == cmp.pos && this.nodeType == cmp.nodeType;
+        }
+        return false;
+    }
 }
