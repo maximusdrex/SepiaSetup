@@ -17,6 +17,11 @@ public abstract class StateUnit {
         this.pos = new Position(unit.getPosition());
     }
 
+    public StateUnit(int id, Position pos){
+        this.id = id;
+        this.pos = pos;
+    }
+
     protected StateUnit(Unit.UnitView unitView){
         this.id = unitView.getID();
         this.pos = new Position(unitView.getXPosition(), unitView.getYPosition());

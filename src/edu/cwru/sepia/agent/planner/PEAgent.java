@@ -118,17 +118,22 @@ public class PEAgent extends Agent {
         // Then add all actions which don't conflict
         while (!plan.isEmpty()) {
             StripsAction next_action = plan.pop();
-            int unitId = peasantIdMap.get(next_action.getId());
+            if(next_action.peasantAction()) {
+                int unitId = peasantIdMap.get(next_action.getId());
 
-            if(peasantCurrentAction.get(unitId) == null && next_action.preconditionsMet(state)) {
-                Action new_action = next_action.createSepiaAction(unitId);
-                actions.put(unitId, new_action);
-                peasantCurrentAction.put(unitId, new_action);  
-                
-                System.out.println("Starting : " + next_action.toString());
+                if(peasantCurrentAction.get(unitId) == null && next_action.preconditionsMet(state)) {
+                    Action new_action = next_action.createSepiaAction(unitId);
+                    actions.put(unitId, new_action);
+                    peasantCurrentAction.put(unitId, new_action);  
+                    
+                    System.out.println("Starting : " + next_action.toString());
+                } else {
+                    plan.push(next_action);
+                    break;
+                }
             } else {
-                plan.push(next_action);
-                break;
+                System.out.println("Starting : " + next_action.toString());
+                actions.put(townhallId, next_action.createSepiaAction(townhallId));
             }
         }
 

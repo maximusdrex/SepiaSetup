@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import edu.cwru.sepia.agent.planner.actions.BuildUnitAction;
 import edu.cwru.sepia.agent.planner.actions.CompoundMoveAction;
 import edu.cwru.sepia.agent.planner.actions.ResourceDepositAction;
 import edu.cwru.sepia.agent.planner.actions.ResourceGatherAction;
@@ -29,10 +30,11 @@ public class StateRepresentation {
     public int requiredGold;
     public int requiredWood;
 
-    private Boolean buildPeasants;
+    public Boolean buildPeasants;
 
     public int collectedGold;
     public int collectedWood;
+    public int supply_left;
 
     public int cost;
 
@@ -55,6 +57,8 @@ public class StateRepresentation {
         this.requiredGold = requiredGold;
         this.requiredWood = requiredWood;
         this.buildPeasants = buildPeasants;
+
+        this.supply_left = state.getSupplyCap(playernum) - state.getSupplyAmount(playernum);
     }
 
     /**
@@ -77,6 +81,8 @@ public class StateRepresentation {
         this.requiredGold = parent.requiredGold;
         this.requiredWood = parent.requiredWood;
         this.buildPeasants = parent.buildPeasants;
+
+        this.supply_left = parent.supply_left;
     }
 
     public Peasant getPeasantByID(int id) {
@@ -117,7 +123,14 @@ public class StateRepresentation {
         // Then generate any possible resource gathers
         // Then generate any possible deposits
         List<StripsAction> children = this.peasants.stream().map(p -> generateActionsForP(p)).flatMap(Collection::stream).collect(Collectors.toList());
+        addBuildActions(children);
         return children;
+    }
+
+    public void addBuildActions(List<StripsAction> children) {
+        if (buildPeasants && collectedGold >= 400 && supply_left > 0) {
+            children.add(0, new BuildUnitAction(townHall.getID()));
+        }
     }
 
     public List<StripsAction> generateActionsForP(Peasant p) {

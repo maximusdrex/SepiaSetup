@@ -99,18 +99,20 @@ public class GameState implements Comparable<GameState> {
      * Write your heuristic function here. Remember this must be admissible for the properties of A* to hold. If you
      * can come up with an easy way of computing a consistent heuristic that is even better, but not strictly necessary.
      *
-     * Add a description here in your submission explaining your heuristic.
+     * This heuristic encourages the algorithm get as much of each of the resources as is necessary without going over
+     * It also slightly encourages building units (if available)
      *
      * @return The value estimated remaining cost to reach a goal state from this state.
      */
     public double heuristic() {
-        double h = 0.0;
+        double h = 3.0;
         if (representation.requiredGold - representation.collectedGold > 0) {
             h += representation.requiredGold - representation.collectedGold;
         }
         if (representation.requiredWood - representation.collectedWood > 0) {
             h += representation.requiredWood - representation.collectedWood;
         }
+        h -= representation.peasants.size();
         return h;
     }
 

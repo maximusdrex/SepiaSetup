@@ -226,6 +226,10 @@ public class Position {
         return "(" + x + ", " + y + ")";
     }
 
+    /*
+     * Compares positions with respect to another position
+     * For getting the minimal distance from one location to a list of positions
+     */
     public static class CompPositions implements Comparator<Position> {
         Position init_pos;
         public CompPositions(Position init_pos) {

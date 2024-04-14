@@ -33,7 +33,7 @@ public class ResourceGatherAction implements StripsAction{
         ResourceState r = new_state.representation.getResourceByID(this.r_id);
 
         ResourceType t = r.nodeType;
-        double approx_cost = unit.gatherCost.get(t);
+        double approx_cost = Peasant.gatherCost.get(t);
 
         unit.cargoType = t;
         if(r.amountRemaining >= 100) {
@@ -63,5 +63,9 @@ public class ResourceGatherAction implements StripsAction{
 
     public String toString() {
         return "ResourceGatherAction: peasantId " + this.p_id + ", dest " + this.r_id;
+    }
+
+    public boolean peasantAction() {
+        return true;
     }
 }

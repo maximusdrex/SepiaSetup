@@ -25,7 +25,7 @@ public class CompoundMoveAction implements StripsAction {
         GameState new_state = new GameState(state, this);
 
         Peasant unit = new_state.representation.getPeasantByID(this.id);
-        double approx_cost = unit.getPosition().euclideanDistance(this.dest) * unit.moveCost;
+        double approx_cost = unit.getPosition().euclideanDistance(this.dest) * Peasant.moveCost;
 
         unit.setPosition(dest);
         new_state.representation.cost += approx_cost;
@@ -43,6 +43,10 @@ public class CompoundMoveAction implements StripsAction {
 
     public String toString() {
         return "CompoundMoveAction: peasantId " + this.id + ", dest (" + dest.x +", " + dest.y + ")";
+    }
+
+    public boolean peasantAction() {
+        return true;
     }
 
 }

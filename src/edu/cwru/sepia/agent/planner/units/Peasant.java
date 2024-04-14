@@ -1,42 +1,49 @@
 package edu.cwru.sepia.agent.planner.units;
 
 import edu.cwru.sepia.environment.model.state.Unit;
+import edu.cwru.sepia.util.Direction;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.type.IntersectionType;
 
+import edu.cwru.sepia.agent.planner.Position;
 import edu.cwru.sepia.environment.model.state.ResourceType;
 
 public class Peasant extends StateUnit {
-    public int maxCargo;
+    public static int templateId;
+    public static int maxCargo;
     public int currentCargo;
     public ResourceType cargoType;
-    public int moveCost;
-    public Map<ResourceType, Integer> gatherCost;
-    public int depositCost;
+    public static int moveCost;
+    public static Map<ResourceType, Integer> gatherCost;
+    public static int depositCost;
 
     public Peasant(Peasant parent) {
         super(parent);
-        this.maxCargo = parent.maxCargo;
         this.currentCargo = parent.currentCargo;
         this.cargoType = parent.cargoType;
-        this.moveCost = parent.moveCost;
-        this.gatherCost = parent.gatherCost;
-        this.depositCost = parent.depositCost;
     }
 
     public Peasant(Unit.UnitView unit) {
         super(unit);
-        this.gatherCost = new HashMap<ResourceType, Integer>();
+        gatherCost = new HashMap<ResourceType, Integer>();
         moveCost = unit.getTemplateView().getDurationMove();
         gatherCost.put(ResourceType.GOLD, unit.getTemplateView().getDurationGatherGold());
         gatherCost.put(ResourceType.WOOD, unit.getTemplateView().getDurationGatherWood());
         depositCost = unit.getTemplateView().getDurationDeposit();
-        this.currentCargo = unit.getCargoAmount();
-        this.cargoType = unit.getCargoType();
-        this.maxCargo = 100;
+        currentCargo = unit.getCargoAmount();
+        cargoType = unit.getCargoType();
+        maxCargo = 100;
+        templateId = unit.getTemplateView().getID();
+    }
+
+    public Peasant(TownHall townhall, List<Peasant> peasants) {
+        super(peasants.size() + 1, new Position(townhall.getPosition().move(Direction.WEST)));
+        currentCargo = 0;
+        cargoType = null;
     }
 
     @Override

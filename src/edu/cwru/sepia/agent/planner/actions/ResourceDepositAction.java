@@ -28,7 +28,7 @@ public class ResourceDepositAction implements StripsAction{
         GameState new_state = new GameState(state, this);
 
         Peasant unit = new_state.representation.getPeasantByID(this.p_id);
-        double approx_cost = unit.depositCost;
+        double approx_cost = Peasant.depositCost;
 
         if(unit.cargoType == ResourceType.GOLD) {
             new_state.representation.collectedGold += unit.currentCargo;
@@ -51,5 +51,9 @@ public class ResourceDepositAction implements StripsAction{
 
     public String toString() {
         return "ResourceDepositAction: peasantId " + this.p_id + ", dest " + this.t_id;
+    }
+
+    public boolean peasantAction() {
+        return true;
     }
 }

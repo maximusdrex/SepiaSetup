@@ -42,4 +42,6 @@ public interface StripsAction {
     public Action createSepiaAction(int peasantID);
 
     public Integer getId();
+
+    public boolean peasantAction();
 }
