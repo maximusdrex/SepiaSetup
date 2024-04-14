@@ -33,7 +33,6 @@ public class CompoundMoveAction implements StripsAction {
         return new_state;
     }
 
-    public Action createSepiaAction(GameState state) {
-
-    }
+    //public Action createSepiaAction(GameState state) {
+    //}
 }

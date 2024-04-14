@@ -10,6 +10,7 @@ import edu.cwru.sepia.environment.model.state.ResourceType;
 import edu.cwru.sepia.environment.model.state.State;
 import edu.cwru.sepia.environment.model.state.Template;
 import edu.cwru.sepia.environment.model.state.Unit;
+import edu.cwru.sepia.util.Direction;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,7 +24,7 @@ import java.util.Stack;
 public class PEAgent extends Agent {
 
     // The plan being executed
-    private Stack<Map<String, Object>> plan;    // I changed this from: private Stack<StripsAction> plan = null;
+    private Stack<StripsAction> plan;    // I changed this from: private Stack<StripsAction> plan = null;
 
     // maps the real unit Ids to the plan's unit ids
     // when you're planning you won't know the true unit IDs that sepia assigns. So you'll use placeholders (1, 2, 3).
@@ -89,7 +90,7 @@ public class PEAgent extends Agent {
     public Map<Integer, Action> middleStep(State.StateView stateView, History.HistoryView historyView) {
         Map<Integer, Action> actions = new HashMap<>();
 
-        while (!plan.isEmpty()) {
+        /*while (!plan.isEmpty()) {
             Map<String, Object> actionMap = plan.pop();
             int type = (int) actionMap.get("type");
             int unitId = (int) actionMap.get("unitId");
@@ -109,7 +110,7 @@ public class PEAgent extends Agent {
                 plan.push(actionMap);
                 break;
             }
-        }
+        }*/
 
         return actions;
     }

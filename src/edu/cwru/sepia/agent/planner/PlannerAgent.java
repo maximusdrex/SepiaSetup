@@ -98,7 +98,7 @@ public class PlannerAgent extends Agent {
         Set<GameState> closedList = new HashSet<GameState>();
 
         //Add initial node to open list
-        GameState initNode = new GameState(null, playernum, requiredGold, requiredWood, buildPeasants)
+        GameState initNode = startState;
         // Initial node's f doesn't matter (as long as it isn't null)
         openList.add(initNode);
 
@@ -107,11 +107,13 @@ public class PlannerAgent extends Agent {
             GameState currentNode = null;
 
             //get the node in the openList with the least f val
-            for (GameState astarNode : openList) {
-                if (currentNode == null || astarNode.heuristic() < currentNode.heuristic()) {
-                    currentNode = astarNode;
+            for (GameState gameNode : openList) {
+                if (currentNode == null || gameNode.heuristic() < currentNode.heuristic()) {
+                    currentNode = gameNode;
                 }
             }
+
+            System.out.println(currentNode.heuristic());
 
             //pop that node from the open set and add it to the closed set
             openList.remove(currentNode);

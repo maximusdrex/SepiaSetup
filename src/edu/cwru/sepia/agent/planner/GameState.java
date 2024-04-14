@@ -55,6 +55,9 @@ public class GameState implements Comparable<GameState> {
      * @param buildPeasants True if the BuildPeasant action should be considered
      */
     public GameState(State.StateView state, int playernum, int requiredGold, int requiredWood, boolean buildPeasants) {
+        this.parent = null;
+        this.action = null;
+        this.representation = new StateRepresentation(state, playernum, requiredGold, requiredWood, buildPeasants);
     }
 
     public GameState(GameState parent, StripsAction action) {
@@ -71,8 +74,7 @@ public class GameState implements Comparable<GameState> {
      * @return true if the goal conditions are met in this instance of game state.
      */
     public boolean isGoal() {
-        // TODO: Implement me!
-        return false;
+        return representation.collectedGold >= representation.requiredGold && representation.collectedWood >= representation.requiredWood;
     }
 
     /**
@@ -89,7 +91,8 @@ public class GameState implements Comparable<GameState> {
         // Then generate any possible deposits
 
         // For all StripsActions apply them to get the new game states
-        return representation.generateActions().stream().map(action -> action.apply(this)).collect(Collectors.toList());
+        List<GameState> children = representation.generateActions().stream().map(action -> action.apply(this)).collect(Collectors.toList());
+        return children;
     }
 
     /**
@@ -101,8 +104,14 @@ public class GameState implements Comparable<GameState> {
      * @return The value estimated remaining cost to reach a goal state from this state.
      */
     public double heuristic() {
-        // TODO: Implement me!
-        return (representation.requiredGold - representation.collectedGold) + (representation.requiredWood - representation.collectedWood);
+        double h = 0.0;
+        if (representation.requiredGold - representation.collectedGold > 0) {
+            h += representation.requiredGold - representation.collectedGold;
+        }
+        if (representation.requiredWood - representation.collectedWood > 0) {
+            h += representation.requiredWood - representation.collectedWood;
+        }
+        return h;
     }
 
     /**
@@ -153,7 +162,7 @@ public class GameState implements Comparable<GameState> {
      */
     @Override
     public int hashCode() {
-        return representation.hashCode();
+        return this.representation.hashCode();
     }
 
     /**

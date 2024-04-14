@@ -11,6 +11,8 @@ public class ResourceState extends StateUnit {
 
     public ResourceState(ResourceState parent) {
         super(parent);
+        this.amountRemaining = parent.amountRemaining;
+        this.nodeType = parent.nodeType;
     }
 
     public ResourceState(ResourceNode.ResourceView unit) {

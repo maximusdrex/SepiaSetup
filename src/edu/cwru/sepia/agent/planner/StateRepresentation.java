@@ -115,7 +115,8 @@ public class StateRepresentation {
         // Then generate a move to the town hall
         // Then generate any possible resource gathers
         // Then generate any possible deposits
-        return this.peasants.stream().map(p -> generateActionsForP(p)).flatMap(Collection::stream).collect(Collectors.toList());
+        List<StripsAction> children = this.peasants.stream().map(p -> generateActionsForP(p)).flatMap(Collection::stream).collect(Collectors.toList());
+        return children;
     }
 
     public List<StripsAction> generateActionsForP(Peasant p) {
@@ -123,11 +124,11 @@ public class StateRepresentation {
         // if cargo == 0
         List<StripsAction> possible_moves = new ArrayList<StripsAction>();
         if(p.currentCargo > 0) {
-            possible_moves.addAll(generateTownHallMoves(p));
             possible_moves.addAll(generateDeposits(p));
+            possible_moves.addAll(generateTownHallMoves(p));
         } else {
-            possible_moves.addAll(generateResourceMoves(p));
             possible_moves.addAll(generateGathers(p));
+            possible_moves.addAll(generateResourceMoves(p));
         }
         return possible_moves;
     }
@@ -236,8 +237,7 @@ public class StateRepresentation {
      */
     @Override
     public int hashCode() {
-        // TODO: Implement me!
-        return 0;
+        return this.peasants.hashCode() + this.resources.hashCode() + (this.collectedGold) + (this.collectedWood) + (this.playerNum) + (this.townHall.getID());
     }
 
 }

@@ -2,7 +2,10 @@ package edu.cwru.sepia.agent.planner.units;
 
 import edu.cwru.sepia.environment.model.state.Unit;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.lang.model.type.IntersectionType;
 
 import edu.cwru.sepia.environment.model.state.ResourceType;
 
@@ -16,10 +19,17 @@ public class Peasant extends StateUnit {
 
     public Peasant(Peasant parent) {
         super(parent);
+        this.maxCargo = parent.maxCargo;
+        this.currentCargo = parent.currentCargo;
+        this.cargoType = parent.cargoType;
+        this.moveCost = parent.moveCost;
+        this.gatherCost = parent.gatherCost;
+        this.depositCost = parent.depositCost;
     }
 
     public Peasant(Unit.UnitView unit) {
         super(unit);
+        this.gatherCost = new HashMap<ResourceType, Integer>();
         moveCost = unit.getTemplateView().getDurationMove();
         gatherCost.put(ResourceType.GOLD, unit.getTemplateView().getDurationGatherGold());
         gatherCost.put(ResourceType.WOOD, unit.getTemplateView().getDurationGatherWood());
