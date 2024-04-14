@@ -33,6 +33,16 @@ public class CompoundMoveAction implements StripsAction {
         return new_state;
     }
 
-    //public Action createSepiaAction(GameState state) {
-    //}
+    public Action createSepiaAction(int peasantID) {
+        return Action.createCompoundMove(peasantID, dest.x, dest.y);
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public String toString() {
+        return "CompoundMoveAction: peasantId " + this.id + ", dest (" + dest.x +", " + dest.y + ")";
+    }
+
 }

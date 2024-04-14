@@ -135,7 +135,7 @@ public class PlannerAgent extends Agent {
 
     private Stack<StripsAction> backtrackGoal(GameState goal_node) {
         Stack<StripsAction> path = new Stack<StripsAction>();
-        GameState currentNode = goal_node.getParent();
+        GameState currentNode = goal_node;
         do {
             path.add(currentNode.getAction());
             currentNode = currentNode.getParent();

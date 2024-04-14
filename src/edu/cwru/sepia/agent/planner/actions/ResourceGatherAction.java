@@ -1,5 +1,6 @@
 package edu.cwru.sepia.agent.planner.actions;
 
+import edu.cwru.sepia.action.Action;
 import edu.cwru.sepia.agent.planner.GameState;
 import edu.cwru.sepia.agent.planner.Position;
 import edu.cwru.sepia.agent.planner.units.Peasant;
@@ -48,4 +49,15 @@ public class ResourceGatherAction implements StripsAction{
         return new_state;
     }
 
+    public Action createSepiaAction(int peasantID) {
+        return Action.createCompoundGather(peasantID, r_id);
+    }
+
+    public Integer getId() {
+        return this.p_id;
+    }
+
+    public String toString() {
+        return "ResourceGatherAction: peasantId " + this.p_id + ", dest " + this.r_id;
+    }
 }

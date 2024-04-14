@@ -34,6 +34,9 @@ public class Peasant extends StateUnit {
         gatherCost.put(ResourceType.GOLD, unit.getTemplateView().getDurationGatherGold());
         gatherCost.put(ResourceType.WOOD, unit.getTemplateView().getDurationGatherWood());
         depositCost = unit.getTemplateView().getDurationDeposit();
+        this.currentCargo = unit.getCargoAmount();
+        this.cargoType = unit.getCargoType();
+        this.maxCargo = 100;
     }
 
     @Override

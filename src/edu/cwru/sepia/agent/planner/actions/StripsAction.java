@@ -39,5 +39,7 @@ public interface StripsAction {
      */
     public GameState apply(GameState state);
 
-    //public Action createSepiaAction(GameState state);
+    public Action createSepiaAction(int peasantID);
+
+    public Integer getId();
 }

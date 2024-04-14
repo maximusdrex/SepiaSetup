@@ -2,6 +2,7 @@ package edu.cwru.sepia.agent.planner;
 
 import edu.cwru.sepia.action.Action;
 import edu.cwru.sepia.action.ActionFeedback;
+import edu.cwru.sepia.action.ActionResult;
 import edu.cwru.sepia.agent.Agent;
 import edu.cwru.sepia.agent.planner.actions.*;
 import edu.cwru.sepia.environment.model.state.*;
@@ -33,11 +34,13 @@ public class PEAgent extends Agent {
     private int townhallId;
     private int peasantTemplateId;
 
+    private Map<Integer, Action> peasantCurrentAction;
+
     public PEAgent(int playernum, Stack<StripsAction> plan) {
         super(playernum);
         peasantIdMap = new HashMap<Integer, Integer>();
         this.plan = plan;
-
+        peasantCurrentAction = new HashMap<Integer, Action>();
     }
 
     @Override
@@ -90,27 +93,44 @@ public class PEAgent extends Agent {
     public Map<Integer, Action> middleStep(State.StateView stateView, History.HistoryView historyView) {
         Map<Integer, Action> actions = new HashMap<>();
 
-        /*while (!plan.isEmpty()) {
-            Map<String, Object> actionMap = plan.pop();
-            int type = (int) actionMap.get("type");
-            int unitId = (int) actionMap.get("unitId");
-            Direction direction = (Direction) actionMap.get("direction"); //need Direction class, not sure how to import
-            int targetId = (int) actionMap.get("targetId");
-            int x = (int) actionMap.get("x");
-            int y = (int) actionMap.get("y");
+        GameState state = new GameState(stateView, this.playernum, 0, 0, false);
 
-            // Check if the previous action is completed
-            ActionFeedback feedback = historyView.getCommandFeedback(getPlayerNumber(), stateView.getTurnNumber() - 1).get(peasantIdMap.get(unitId)).getFeedback();
-            if (feedback == ActionFeedback.COMPLETED) {
-                // Create the SEPIA action and add it to the actions map
-                Action sepiaAction = createSepiaAction(type, peasantIdMap.get(unitId), direction, targetId, x, y);
-                actions.put(peasantIdMap.get(unitId), sepiaAction);
+        // Check feedback on current actions first
+        for(int unitId : stateView.getUnitIds(playernum)) {
+            Unit.UnitView unit = stateView.getUnit(unitId);
+            String unitType = unit.getTemplateView().getName().toLowerCase();
+            if(unitType.equals("peasant")) {
+                // Restart any failed actions
+                ActionResult r = historyView.getCommandFeedback(this.playernum, OBSERVER_ID).get(unit.getID());
+                ActionFeedback feedback = null;
+                if (r != null) {
+                    feedback = r.getFeedback();
+                }
+
+                if (feedback != null && feedback != ActionFeedback.COMPLETED && feedback != ActionFeedback.INCOMPLETE) {
+                    actions.put(unitId, peasantCurrentAction.get(unitId));
+                } else if (feedback == null || feedback == ActionFeedback.COMPLETED) {
+                    peasantCurrentAction.remove(unitId);
+                }
+            }
+        }
+
+        // Then add all actions which don't conflict
+        while (!plan.isEmpty()) {
+            StripsAction next_action = plan.pop();
+            int unitId = peasantIdMap.get(next_action.getId());
+
+            if(peasantCurrentAction.get(unitId) == null && next_action.preconditionsMet(state)) {
+                Action new_action = next_action.createSepiaAction(unitId);
+                actions.put(unitId, new_action);
+                peasantCurrentAction.put(unitId, new_action);  
+                
+                System.out.println("Starting : " + next_action.toString());
             } else {
-                // Put the action back on the stack
-                plan.push(actionMap);
+                plan.push(next_action);
                 break;
             }
-        }*/
+        }
 
         return actions;
     }
