@@ -1,9 +1,11 @@
 package edu.cwru.sepia.agent.planner;
 
 import edu.cwru.sepia.action.Action;
+import edu.cwru.sepia.action.ActionFeedback;
 import edu.cwru.sepia.agent.Agent;
 import edu.cwru.sepia.agent.planner.actions.*;
-import edu.cwru.sepia.environment.model.history.History;
+import edu.cwru.sepia.environment.model.state.*;
+import edu.cwru.sepia.environment.model.history.*;
 import edu.cwru.sepia.environment.model.state.ResourceType;
 import edu.cwru.sepia.environment.model.state.State;
 import edu.cwru.sepia.environment.model.state.Template;
@@ -21,7 +23,7 @@ import java.util.Stack;
 public class PEAgent extends Agent {
 
     // The plan being executed
-    private Stack<StripsAction> plan = null;
+    private Stack<Map<String, Object>> plan;    // I changed this from: private Stack<StripsAction> plan = null;
 
     // maps the real unit Ids to the plan's unit ids
     // when you're planning you won't know the true unit IDs that sepia assigns. So you'll use placeholders (1, 2, 3).
@@ -85,10 +87,34 @@ public class PEAgent extends Agent {
      */
     @Override
     public Map<Integer, Action> middleStep(State.StateView stateView, History.HistoryView historyView) {
-        // TODO: Implement me!
-        return null;
+        Map<Integer, Action> actions = new HashMap<>();
+
+        while (!plan.isEmpty()) {
+            Map<String, Object> actionMap = plan.pop();
+            int type = (int) actionMap.get("type");
+            int unitId = (int) actionMap.get("unitId");
+            Direction direction = (Direction) actionMap.get("direction"); //need Direction class, not sure how to import
+            int targetId = (int) actionMap.get("targetId");
+            int x = (int) actionMap.get("x");
+            int y = (int) actionMap.get("y");
+
+            // Check if the previous action is completed
+            ActionFeedback feedback = historyView.getCommandFeedback(getPlayerNumber(), stateView.getTurnNumber() - 1).get(peasantIdMap.get(unitId)).getFeedback();
+            if (feedback == ActionFeedback.COMPLETED) {
+                // Create the SEPIA action and add it to the actions map
+                Action sepiaAction = createSepiaAction(type, peasantIdMap.get(unitId), direction, targetId, x, y);
+                actions.put(peasantIdMap.get(unitId), sepiaAction);
+            } else {
+                // Put the action back on the stack
+                plan.push(actionMap);
+                break;
+            }
+        }
+
+        return actions;
     }
 
+   
     /**
      * Returns a SEPIA version of the specified Strips Action.
      *
@@ -112,10 +138,20 @@ public class PEAgent extends Agent {
      * @param action StripsAction
      * @return SEPIA representation of same action
      */
-    private Action createSepiaAction(StripsAction action) {
-        return null;
+    private Action createSepiaAction(int type, int unitId, Direction direction, int targetId, int x, int y) {
+        switch (type) {
+            case 0:
+                return Action.createPrimitiveGather(unitId, direction);
+            case 1:
+                return Action.createPrimitiveDeposit(unitId, direction);
+            case 2:
+                return Action.createPrimitiveProduction(townhallId, peasantTemplateId);
+            case 3:
+                return Action.createCompoundMove(unitId, x, y);
+            default:
+                throw new IllegalArgumentException("Unsupported action type: " + type);
+        }
     }
-
     @Override
     public void terminalStep(State.StateView stateView, History.HistoryView historyView) {
 
