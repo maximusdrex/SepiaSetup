@@ -4,6 +4,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.annotation.Resources;
 import javax.print.attribute.standard.PagesPerMinute;
 
 import org.omg.PortableInterceptor.NON_EXISTENT;
@@ -11,14 +12,12 @@ import org.omg.PortableInterceptor.NON_EXISTENT;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-import edu.cwru.sepia.agent.planner.actions.BuildUnitAction;
-import edu.cwru.sepia.agent.planner.actions.CompoundMoveAction;
-import edu.cwru.sepia.agent.planner.actions.ResourceDepositAction;
-import edu.cwru.sepia.agent.planner.actions.ResourceGatherAction;
-import edu.cwru.sepia.agent.planner.actions.StripsAction;
+import edu.cwru.sepia.agent.planner.kactions.*;
 import edu.cwru.sepia.agent.planner.units.*;
 import edu.cwru.sepia.environment.model.state.ResourceType;
 import edu.cwru.sepia.environment.model.state.State.StateView;
@@ -36,14 +35,14 @@ public class StateRepresentation {
     public int collectedWood;
     public int supply_left;
 
-    public int cost;
+    public double cost;
 
     public List<Peasant> peasants;
     public List<ResourceState> resources;
     private TownHall townHall;
 
     public StateRepresentation(StateView state, int playernum, int requiredGold, int requiredWood, boolean buildPeasants) {
-        this.cost = 0;
+        this.cost = 0.0;
 
         this.peasants = state.getAllUnits().stream().filter(x -> x.getTemplateView().getName().equals("Peasant")).map(x -> new Peasant(x)).collect(Collectors.toList());
         this.resources = state.getAllResourceNodes().stream().map(x -> new ResourceState(x)).collect(Collectors.toList());
@@ -116,82 +115,142 @@ public class StateRepresentation {
         return getAllObjects().stream().filter(x -> x.getPosition().equals(pos)).findAny().orElse(null);
     }
 
-    public List<StripsAction> generateActions() {
+    public List<StripsKAction> generateActions() {
         // For each peasant generate all possible useful moves or other actions
         // First generate a move to the closest non-empty resource of a given type
         // Then generate a move to the town hall
         // Then generate any possible resource gathers
         // Then generate any possible deposits
-        List<StripsAction> children = this.peasants.stream().map(p -> generateActionsForP(p)).flatMap(Collection::stream).collect(Collectors.toList());
+        List<StripsKAction> children = generateActionsForAll();
         addBuildActions(children);
         return children;
     }
 
-    public void addBuildActions(List<StripsAction> children) {
+    public void addBuildActions(List<StripsKAction> children) {
         if (buildPeasants && collectedGold >= 400 && supply_left > 0) {
             children.add(0, new BuildUnitAction(townHall.getID()));
         }
     }
 
-    public List<StripsAction> generateActionsForP(Peasant p) {
-        // To simplify, only generate townhall moves if cargo > 0 and only generate resource moves
-        // if cargo == 0
-        List<StripsAction> possible_moves = new ArrayList<StripsAction>();
-        if(p.currentCargo > 0) {
-            possible_moves.addAll(generateDeposits(p));
-            if(possible_moves.isEmpty()) possible_moves.addAll(generateTownHallMoves(p));
-        } else {
-            possible_moves.addAll(generateGathers(p));
-            if(possible_moves.isEmpty()) possible_moves.addAll(generateResourceMoves(p));
+    public List<StripsKAction> generateActionsForAll() {
+        List<StripsKAction> possible_moves = new ArrayList<StripsKAction>();
+        // Generate moves to closest resources of each type
+        possible_moves.addAll(generateResourceMoves());
+        // Generate moves to the townhall
+        possible_moves.addAll(generateTownHallMoves());
+        // Generate deposit actions
+        possible_moves.addAll(generateDeposits());
+        // Generate gather actions
+        possible_moves.addAll(generateGathers());
+
+        return possible_moves;
+    }
+
+    public List<StripsKAction> generateResourceMoves() {
+        List<StripsKAction> possible_moves = new ArrayList<StripsKAction>();
+        for(ResourceType t : ResourceType.values()) {
+            if((t == ResourceType.GOLD && collectedGold < requiredGold) || (t == ResourceType.WOOD && collectedWood < requiredWood)) {
+                List<Position> filled = new ArrayList<Position>();
+                Map<Integer, Position> dests = new HashMap<Integer, Position>();
+                for (Peasant p : this.peasants) {
+                    Position d = generateResourcePos(p, t, filled);
+                    // Don't bother adding if unit already has cargo
+                    if (d != null && p.currentCargo == 0) {
+                        dests.put(p.getID(), d);
+                        filled.add(d);
+                    }
+                }
+                if(dests.size() > 0) {
+                    MoveKAction resource_moves = new MoveKAction(dests);
+                    possible_moves.add(resource_moves);
+                }
+            }
         }
         return possible_moves;
     }
 
-    public List<StripsAction> generateResourceMoves(Peasant p) {
-        List<Position> possible_moves = new ArrayList<Position>();
-        // Generate moves for each resource type
-        for(ResourceType t : ResourceType.values()) {
-            if((t == ResourceType.GOLD && collectedGold < requiredGold) || (t == ResourceType.WOOD && collectedWood < requiredWood)) {
-                Position resource_pos = closestResource(p, t).getPosition();
-                List<Position> adj_pos = resource_pos.getEmptyAdjacentPositions(getAllObjectPositions());
-                Comparator<Position> comp = new Position.CompPositions(p.getPosition());
-                // Add the closest position to the list
-                adj_pos.stream().min(comp).ifPresent(x -> possible_moves.add(x));
+    public List<StripsKAction> generateTownHallMoves() {
+        List<StripsKAction> possible_moves = new ArrayList<StripsKAction>();
+
+        List<Position> filled = new ArrayList<Position>();
+        Map<Integer, Position> dests = new HashMap<Integer, Position>();
+        for (Peasant p : this.peasants) {
+            Position d = generateTownHallPos(p, filled);
+            // Don't bother adding if there is no cargo
+            if (d != null && p.currentCargo > 0) {
+                dests.put(p.getID(), d);
+                filled.add(d);
             }
         }
+        if(dests.size() > 0){
+            MoveKAction resource_moves = new MoveKAction(dests);
+            possible_moves.add(resource_moves);
+        }
 
-        return possible_moves.stream().map(x -> new CompoundMoveAction(p.getID(), x)).collect(Collectors.toList());
+        return possible_moves;
     }
 
-    public List<StripsAction> generateTownHallMoves(Peasant p) {
-        List<Position> possible_moves = new ArrayList<Position>();
-        Position resource_pos = this.townHall.getPosition();
-        List<Position> adj_pos = resource_pos.getEmptyAdjacentPositions(getAllObjectPositions());
+    public Position generateResourcePos(Peasant p, ResourceType t, List<Position> filled_positions) {
+        Position resource_pos = closestResource(p, t).getPosition();
+        // Don't add the same positions as another peasant
+        List<Position> fullList = new ArrayList<Position>(getAllObjectPositions());
+        fullList.addAll(filled_positions);
+        List<Position> adj_pos = resource_pos.getEmptyAdjacentPositions(fullList);
         Comparator<Position> comp = new Position.CompPositions(p.getPosition());
-
-        adj_pos.stream().min(comp).ifPresent(x -> possible_moves.add(x));
-
-        return possible_moves.stream().map(x -> new CompoundMoveAction(p.getID(), x)).collect(Collectors.toList());
+        // Add the closest position to the list
+        return adj_pos.stream().min(comp).orElse(null);
     }
 
-    public List<StripsAction> generateGathers(Peasant p) {
-        if (p.currentCargo == 0) {
-            return getAdjacentUnitsIn(p, this.resources)
-                .stream()
-                .filter(x -> x.amountRemaining > 0)
-                .map(x -> new ResourceGatherAction(p.getID(), x.getID()))
-                .collect(Collectors.toList());
-        } else {
-            return new ArrayList<StripsAction>();
-        }
+    public Position generateTownHallPos(Peasant p, List<Position> filled_positions) {
+        Position resource_pos = this.townHall.getPosition();
+        // Don't add the same positions as another peasant
+        List<Position> fullList = new ArrayList<Position>(getAllObjectPositions());
+        fullList.addAll(filled_positions);
+        List<Position> adj_pos = resource_pos.getEmptyAdjacentPositions(fullList);
+        Comparator<Position> comp = new Position.CompPositions(p.getPosition());
+        // Add the closest position to the list
+        return adj_pos.stream().min(comp).orElse(null);
     }
 
-    public List<StripsAction> generateDeposits(Peasant p) {
-        List<StripsAction> possible_actions = new ArrayList<StripsAction>();
-        if (p.currentCargo > 0 && p.getPosition().isAdjacent(this.townHall.getPosition())) {
-            possible_actions.add(new ResourceDepositAction(p.getID(), this.townHall.getID()));
+    public List<StripsKAction> generateGathers() {
+        List<StripsKAction> possible_moves = new ArrayList<StripsKAction>();
+
+        Map<Integer, Integer> peasant2resource = new HashMap<Integer, Integer>();
+        for (Peasant p : this.peasants) {
+            if (p.currentCargo == 0) {
+                ResourceState r = getAdjacentUnitsIn(p, this.resources)
+                    .stream()
+                    .filter(x -> x.amountRemaining > 0)
+                    .findAny()
+                    .orElse(null);
+                if (r != null) {
+                    peasant2resource.put(p.getID(), r.getID());
+                }
+            }
         }
-        return possible_actions;
+        if(peasant2resource.size() > 0) {
+            GatherKAction resource_gathers = new GatherKAction(peasant2resource);
+            possible_moves.add(resource_gathers);
+        }
+
+        return possible_moves;
+    }
+
+    public List<StripsKAction> generateDeposits() {
+        List<StripsKAction> possible_moves = new ArrayList<StripsKAction>();
+
+        Map<Integer, Integer> peasant2resource = new HashMap<Integer, Integer>();
+        for (Peasant p : this.peasants) {
+            if (p.currentCargo == 0 && p.getPosition().isAdjacent(this.townHall.getPosition())) {
+                peasant2resource.put(p.getID(), this.townHall.getID());
+            }
+        }
+        if(peasant2resource.size() > 0) {
+            DepositKAction resource_gathers = new DepositKAction(peasant2resource);
+            possible_moves.add(resource_gathers);
+        }
+
+        return possible_moves;
     }
 
     public <T extends StateUnit> List<T> getAdjacentUnitsIn(Peasant p, List<T> unit_list) {
@@ -217,6 +276,14 @@ public class StateRepresentation {
             return null;
         }
         return (ResourceState) getUnitAtPos(position_of_closest);
+    }
+
+    public int getGatheredGold() {
+        return this.peasants.stream().filter(x -> x.cargoType == ResourceType.GOLD).mapToInt(x -> x.currentCargo).sum();
+    }
+
+    public int getGatheredWood() {
+        return this.peasants.stream().filter(x -> x.cargoType == ResourceType.WOOD).mapToInt(x -> x.currentCargo).sum();
     }
 
 

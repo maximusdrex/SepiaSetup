@@ -4,7 +4,7 @@ import edu.cwru.sepia.action.Action;
 import edu.cwru.sepia.action.ActionFeedback;
 import edu.cwru.sepia.action.ActionResult;
 import edu.cwru.sepia.agent.Agent;
-import edu.cwru.sepia.agent.planner.actions.*;
+import edu.cwru.sepia.agent.planner.kactions.*;
 import edu.cwru.sepia.environment.model.state.*;
 import edu.cwru.sepia.environment.model.history.*;
 import edu.cwru.sepia.environment.model.state.ResourceType;
@@ -25,7 +25,7 @@ import java.util.Stack;
 public class PEAgent extends Agent {
 
     // The plan being executed
-    private Stack<StripsAction> plan;    // I changed this from: private Stack<StripsAction> plan = null;
+    private Stack<StripsKAction> plan;    // I changed this from: private Stack<StripsKAction> plan = null;
 
     // maps the real unit Ids to the plan's unit ids
     // when you're planning you won't know the true unit IDs that sepia assigns. So you'll use placeholders (1, 2, 3).
@@ -36,7 +36,7 @@ public class PEAgent extends Agent {
 
     private Map<Integer, Action> peasantCurrentAction;
 
-    public PEAgent(int playernum, Stack<StripsAction> plan) {
+    public PEAgent(int playernum, Stack<StripsKAction> plan) {
         super(playernum);
         peasantIdMap = new HashMap<Integer, Integer>();
         this.plan = plan;
@@ -116,8 +116,10 @@ public class PEAgent extends Agent {
         }
 
         // Then add all actions which don't conflict
+        /*
         while (!plan.isEmpty()) {
-            StripsAction next_action = plan.pop();
+            StripsKAction next_action = plan.pop();
+            // Check if this action is for peasants to execute
             if(next_action.peasantAction()) {
                 int unitId = peasantIdMap.get(next_action.getId());
 
@@ -126,16 +128,17 @@ public class PEAgent extends Agent {
                     actions.put(unitId, new_action);
                     peasantCurrentAction.put(unitId, new_action);  
                     
-                    System.out.println("Starting : " + next_action.toString());
                 } else {
+                    // Restart the action if it wasn't added
                     plan.push(next_action);
                     break;
                 }
             } else {
-                System.out.println("Starting : " + next_action.toString());
+                // Execute build actions
                 actions.put(townhallId, next_action.createSepiaAction(townhallId));
             }
         }
+        */
 
         return actions;
     }
@@ -161,10 +164,14 @@ public class PEAgent extends Agent {
      *
      * these actions are stored in a mapping between the peasant unit ID executing the action and the action you created.
      *
-     * @param action StripsAction
+     * @param action StripsKAction
      * @return SEPIA representation of same action
      */
     private Action createSepiaAction(int type, int unitId, Direction direction, int targetId, int x, int y) {
+        // We ended up not using this function and instead chose to create actions from inside the action classes
+        // as that seemed cleaner than checking their action types here 
+
+
         switch (type) {
             case 0:
                 return Action.createPrimitiveGather(unitId, direction);

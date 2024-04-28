@@ -1,11 +1,16 @@
-package edu.cwru.sepia.agent.planner.actions;
+package edu.cwru.sepia.agent.planner.kactions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import edu.cwru.sepia.action.Action;
 import edu.cwru.sepia.agent.planner.GameState;
 import edu.cwru.sepia.agent.planner.units.Peasant;
 import edu.cwru.sepia.environment.model.state.ResourceType;
 
-public class BuildUnitAction implements StripsAction {
+public class BuildUnitAction implements StripsKAction {
     private int t_id;
 
     public BuildUnitAction(int townhall_id) {
@@ -29,12 +34,17 @@ public class BuildUnitAction implements StripsAction {
         return new_state;
     }
 
-    public Action createSepiaAction(int townhall_id) {
-        return Action.createCompoundProduction(t_id, Peasant.templateId);
+    public Map<Integer, Action> createSepiaAction(List<Integer> townhall_id) {
+        Action a = Action.createCompoundProduction(t_id, Peasant.templateId);
+        Map<Integer, Action> m = new HashMap<Integer, Action>();
+        m.put(this.t_id, a);
+        return m;
     }
 
-    public Integer getId() {
-        return this.t_id;
+    public List<Integer> getIds() {
+        List<Integer> ids = new ArrayList<Integer>();
+        ids.add(this.t_id);
+        return ids;
     }
 
     public String toString() {

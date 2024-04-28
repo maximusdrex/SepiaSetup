@@ -14,7 +14,7 @@
         <unit>
             <ID>1</ID>
             <currentHealth>30</currentHealth>
-            <xPosition>7</xPosition>
+            <xPosition>8</xPosition>
             <yPosition>10</yPosition>
             <templateID>26</templateID>
             <cargoAmount>0</cargoAmount>
@@ -106,6 +106,21 @@
             <durationMove>32</durationMove>
             <durationAttack>200</durationAttack>
             <durationDeposit>1</durationDeposit>
+        </template>
+        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ID>32</ID>
+            <foodCost>0</foodCost>
+            <goldCost>1500</goldCost>
+            <woodCost>0</woodCost>
+            <timeCost>1250</timeCost>
+            <name>Ballista1</name>
+            <basicAttackChange>0</basicAttackChange>
+            <piercingAttackChange>15</piercingAttackChange>
+            <armorChange>0</armorChange>
+            <healthChange>0</healthChange>
+            <sightRangeChange>0</sightRangeChange>
+            <rangeChange>0</rangeChange>
+            <affectedUnitTypes>2</affectedUnitTypes>
         </template>
         <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <ID>3</ID>
@@ -409,21 +424,6 @@
             <affectedUnitTypes>25</affectedUnitTypes>
             <affectedUnitTypes>12</affectedUnitTypes>
         </template>
-        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>16</ID>
-            <foodCost>0</foodCost>
-            <goldCost>1500</goldCost>
-            <woodCost>0</woodCost>
-            <timeCost>1250</timeCost>
-            <name>Ranger</name>
-            <basicAttackChange>0</basicAttackChange>
-            <piercingAttackChange>0</piercingAttackChange>
-            <armorChange>0</armorChange>
-            <healthChange>10</healthChange>
-            <sightRangeChange>0</sightRangeChange>
-            <rangeChange>0</rangeChange>
-            <affectedUnitTypes>22</affectedUnitTypes>
-        </template>
         <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <ID>17</ID>
             <foodCost>1</foodCost>
@@ -453,16 +453,16 @@
             <durationDeposit>1</durationDeposit>
         </template>
         <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>18</ID>
+            <ID>16</ID>
             <foodCost>0</foodCost>
-            <goldCost>1000</goldCost>
+            <goldCost>1500</goldCost>
             <woodCost>0</woodCost>
             <timeCost>1250</timeCost>
-            <name>Paladin</name>
+            <name>Ranger</name>
             <basicAttackChange>0</basicAttackChange>
             <piercingAttackChange>0</piercingAttackChange>
             <armorChange>0</armorChange>
-            <healthChange>0</healthChange>
+            <healthChange>10</healthChange>
             <sightRangeChange>0</sightRangeChange>
             <rangeChange>0</rangeChange>
             <affectedUnitTypes>22</affectedUnitTypes>
@@ -484,6 +484,36 @@
             <affectedUnitTypes>12</affectedUnitTypes>
         </template>
         <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ID>18</ID>
+            <foodCost>0</foodCost>
+            <goldCost>1000</goldCost>
+            <woodCost>0</woodCost>
+            <timeCost>1250</timeCost>
+            <name>Paladin</name>
+            <basicAttackChange>0</basicAttackChange>
+            <piercingAttackChange>0</piercingAttackChange>
+            <armorChange>0</armorChange>
+            <healthChange>0</healthChange>
+            <sightRangeChange>0</sightRangeChange>
+            <rangeChange>0</rangeChange>
+            <affectedUnitTypes>22</affectedUnitTypes>
+        </template>
+        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ID>21</ID>
+            <foodCost>0</foodCost>
+            <goldCost>1500</goldCost>
+            <woodCost>0</woodCost>
+            <timeCost>1250</timeCost>
+            <name>Scouting</name>
+            <basicAttackChange>0</basicAttackChange>
+            <piercingAttackChange>0</piercingAttackChange>
+            <armorChange>0</armorChange>
+            <healthChange>0</healthChange>
+            <sightRangeChange>0</sightRangeChange>
+            <rangeChange>0</rangeChange>
+            <affectedUnitTypes>22</affectedUnitTypes>
+        </template>
+        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <ID>20</ID>
             <foodCost>0</foodCost>
             <goldCost>300</goldCost>
@@ -500,14 +530,14 @@
             <affectedUnitTypes>12</affectedUnitTypes>
         </template>
         <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>21</ID>
+            <ID>23</ID>
             <foodCost>0</foodCost>
-            <goldCost>1500</goldCost>
+            <goldCost>2000</goldCost>
             <woodCost>0</woodCost>
             <timeCost>1250</timeCost>
-            <name>Scouting</name>
+            <name>Marksmanship</name>
             <basicAttackChange>0</basicAttackChange>
-            <piercingAttackChange>0</piercingAttackChange>
+            <piercingAttackChange>3</piercingAttackChange>
             <armorChange>0</armorChange>
             <healthChange>0</healthChange>
             <sightRangeChange>0</sightRangeChange>
@@ -543,37 +573,6 @@
             <durationAttack>65</durationAttack>
             <durationDeposit>1</durationDeposit>
         </template>
-        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>23</ID>
-            <foodCost>0</foodCost>
-            <goldCost>2000</goldCost>
-            <woodCost>0</woodCost>
-            <timeCost>1250</timeCost>
-            <name>Marksmanship</name>
-            <basicAttackChange>0</basicAttackChange>
-            <piercingAttackChange>3</piercingAttackChange>
-            <armorChange>0</armorChange>
-            <healthChange>0</healthChange>
-            <sightRangeChange>0</sightRangeChange>
-            <rangeChange>0</rangeChange>
-            <affectedUnitTypes>22</affectedUnitTypes>
-        </template>
-        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>24</ID>
-            <foodCost>0</foodCost>
-            <goldCost>500</goldCost>
-            <woodCost>150</woodCost>
-            <timeCost>700</timeCost>
-            <name>GuardTower</name>
-            <unitPrerequisite>9</unitPrerequisite>
-            <basicAttackChange>4</basicAttackChange>
-            <piercingAttackChange>12</piercingAttackChange>
-            <armorChange>0</armorChange>
-            <healthChange>30</healthChange>
-            <sightRangeChange>0</sightRangeChange>
-            <rangeChange>6</rangeChange>
-            <affectedUnitTypes>1</affectedUnitTypes>
-        </template>
         <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <ID>25</ID>
             <foodCost>1</foodCost>
@@ -600,6 +599,50 @@
             <durationGatherGold>1</durationGatherGold>
             <durationMove>16</durationMove>
             <durationAttack>25</durationAttack>
+            <durationDeposit>1</durationDeposit>
+        </template>
+        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ID>24</ID>
+            <foodCost>0</foodCost>
+            <goldCost>500</goldCost>
+            <woodCost>150</woodCost>
+            <timeCost>700</timeCost>
+            <name>GuardTower</name>
+            <unitPrerequisite>9</unitPrerequisite>
+            <basicAttackChange>4</basicAttackChange>
+            <piercingAttackChange>12</piercingAttackChange>
+            <armorChange>0</armorChange>
+            <healthChange>30</healthChange>
+            <sightRangeChange>0</sightRangeChange>
+            <rangeChange>6</rangeChange>
+            <affectedUnitTypes>1</affectedUnitTypes>
+        </template>
+        <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ID>27</ID>
+            <foodCost>0</foodCost>
+            <goldCost>500</goldCost>
+            <woodCost>250</woodCost>
+            <timeCost>700</timeCost>
+            <name>Farm</name>
+            <baseHealth>400</baseHealth>
+            <baseAttack>0</baseAttack>
+            <piercingAttack>0</piercingAttack>
+            <range>0</range>
+            <armor>20</armor>
+            <sightRange>1</sightRange>
+            <canGather>false</canGather>
+            <canBuild>false</canBuild>
+            <canMove>false</canMove>
+            <canAcceptGold>false</canAcceptGold>
+            <canAcceptWood>false</canAcceptWood>
+            <foodProvided>4</foodProvided>
+            <character>70</character>
+            <goldGatherRate>0</goldGatherRate>
+            <woodGatherRate>0</woodGatherRate>
+            <durationGatherWood>1</durationGatherWood>
+            <durationGatherGold>1</durationGatherGold>
+            <durationMove>1</durationMove>
+            <durationAttack>1</durationAttack>
             <durationDeposit>1</durationDeposit>
         </template>
         <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -639,49 +682,6 @@
             <produces>30</produces>
             <produces>0</produces>
         </template>
-        <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>27</ID>
-            <foodCost>0</foodCost>
-            <goldCost>500</goldCost>
-            <woodCost>250</woodCost>
-            <timeCost>700</timeCost>
-            <name>Farm</name>
-            <baseHealth>400</baseHealth>
-            <baseAttack>0</baseAttack>
-            <piercingAttack>0</piercingAttack>
-            <range>0</range>
-            <armor>20</armor>
-            <sightRange>1</sightRange>
-            <canGather>false</canGather>
-            <canBuild>false</canBuild>
-            <canMove>false</canMove>
-            <canAcceptGold>false</canAcceptGold>
-            <canAcceptWood>false</canAcceptWood>
-            <foodProvided>4</foodProvided>
-            <character>70</character>
-            <goldGatherRate>0</goldGatherRate>
-            <woodGatherRate>0</woodGatherRate>
-            <durationGatherWood>1</durationGatherWood>
-            <durationGatherGold>1</durationGatherGold>
-            <durationMove>1</durationMove>
-            <durationAttack>1</durationAttack>
-            <durationDeposit>1</durationDeposit>
-        </template>
-        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>28</ID>
-            <foodCost>0</foodCost>
-            <goldCost>4000</goldCost>
-            <woodCost>0</woodCost>
-            <timeCost>1250</timeCost>
-            <name>Ballista2</name>
-            <basicAttackChange>0</basicAttackChange>
-            <piercingAttackChange>15</piercingAttackChange>
-            <armorChange>0</armorChange>
-            <healthChange>0</healthChange>
-            <sightRangeChange>0</sightRangeChange>
-            <rangeChange>0</rangeChange>
-            <affectedUnitTypes>2</affectedUnitTypes>
-        </template>
         <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <ID>29</ID>
             <foodCost>0</foodCost>
@@ -698,33 +698,20 @@
             <rangeChange>0</rangeChange>
             <affectedUnitTypes>5</affectedUnitTypes>
         </template>
-        <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>30</ID>
+        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ID>28</ID>
             <foodCost>0</foodCost>
-            <goldCost>900</goldCost>
-            <woodCost>500</woodCost>
-            <timeCost>1225</timeCost>
-            <name>Church</name>
-            <baseHealth>700</baseHealth>
-            <baseAttack>0</baseAttack>
-            <piercingAttack>0</piercingAttack>
-            <range>0</range>
-            <armor>20</armor>
-            <sightRange>1</sightRange>
-            <canGather>false</canGather>
-            <canBuild>false</canBuild>
-            <canMove>false</canMove>
-            <canAcceptGold>false</canAcceptGold>
-            <canAcceptWood>false</canAcceptWood>
-            <foodProvided>0</foodProvided>
-            <character>85</character>
-            <goldGatherRate>0</goldGatherRate>
-            <woodGatherRate>0</woodGatherRate>
-            <durationGatherWood>1</durationGatherWood>
-            <durationGatherGold>1</durationGatherGold>
-            <durationMove>1</durationMove>
-            <durationAttack>1</durationAttack>
-            <durationDeposit>1</durationDeposit>
+            <goldCost>4000</goldCost>
+            <woodCost>0</woodCost>
+            <timeCost>1250</timeCost>
+            <name>Ballista2</name>
+            <basicAttackChange>0</basicAttackChange>
+            <piercingAttackChange>15</piercingAttackChange>
+            <armorChange>0</armorChange>
+            <healthChange>0</healthChange>
+            <sightRangeChange>0</sightRangeChange>
+            <rangeChange>0</rangeChange>
+            <affectedUnitTypes>2</affectedUnitTypes>
         </template>
         <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <ID>31</ID>
@@ -755,39 +742,68 @@
             <durationAttack>1</durationAttack>
             <durationDeposit>1</durationDeposit>
         </template>
-        <template xsi:type="UpgradeTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <ID>32</ID>
+        <template xsi:type="UnitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <ID>30</ID>
             <foodCost>0</foodCost>
-            <goldCost>1500</goldCost>
-            <woodCost>0</woodCost>
-            <timeCost>1250</timeCost>
-            <name>Ballista1</name>
-            <basicAttackChange>0</basicAttackChange>
-            <piercingAttackChange>15</piercingAttackChange>
-            <armorChange>0</armorChange>
-            <healthChange>0</healthChange>
-            <sightRangeChange>0</sightRangeChange>
-            <rangeChange>0</rangeChange>
-            <affectedUnitTypes>2</affectedUnitTypes>
+            <goldCost>900</goldCost>
+            <woodCost>500</woodCost>
+            <timeCost>1225</timeCost>
+            <name>Church</name>
+            <baseHealth>700</baseHealth>
+            <baseAttack>0</baseAttack>
+            <piercingAttack>0</piercingAttack>
+            <range>0</range>
+            <armor>20</armor>
+            <sightRange>1</sightRange>
+            <canGather>false</canGather>
+            <canBuild>false</canBuild>
+            <canMove>false</canMove>
+            <canAcceptGold>false</canAcceptGold>
+            <canAcceptWood>false</canAcceptWood>
+            <foodProvided>0</foodProvided>
+            <character>85</character>
+            <goldGatherRate>0</goldGatherRate>
+            <woodGatherRate>0</woodGatherRate>
+            <durationGatherWood>1</durationGatherWood>
+            <durationGatherGold>1</durationGatherGold>
+            <durationMove>1</durationMove>
+            <durationAttack>1</durationAttack>
+            <durationDeposit>1</durationDeposit>
         </template>
         <resourceAmount>
-            <quantity>1000</quantity>
+            <quantity>0</quantity>
             <type>GOLD</type>
         </resourceAmount>
         <resourceAmount>
-            <quantity>1000</quantity>
+            <quantity>0</quantity>
             <type>WOOD</type>
         </resourceAmount>
         <supply>1</supply>
         <supplyCap>3</supplyCap>
     </player>
     <resourceNode>
+        <ID>2</ID>
+        <type>GOLD_MINE</type>
+        <xPosition>4</xPosition>
+        <yPosition>7</yPosition>
+        <initialAmount>0</initialAmount>
+        <amountRemaining>100</amountRemaining>
+    </resourceNode>
+    <resourceNode>
+        <ID>3</ID>
+        <type>GOLD_MINE</type>
+        <xPosition>15</xPosition>
+        <yPosition>3</yPosition>
+        <initialAmount>0</initialAmount>
+        <amountRemaining>500</amountRemaining>
+    </resourceNode>
+    <resourceNode>
         <ID>4</ID>
         <type>GOLD_MINE</type>
         <xPosition>22</xPosition>
         <yPosition>16</yPosition>
         <initialAmount>0</initialAmount>
-        <amountRemaining>4600</amountRemaining>
+        <amountRemaining>5000</amountRemaining>
     </resourceNode>
     <resourceNode>
         <ID>5</ID>
@@ -795,7 +811,15 @@
         <xPosition>4</xPosition>
         <yPosition>12</yPosition>
         <initialAmount>0</initialAmount>
-        <amountRemaining>100</amountRemaining>
+        <amountRemaining>400</amountRemaining>
+    </resourceNode>
+    <resourceNode>
+        <ID>6</ID>
+        <type>TREE</type>
+        <xPosition>12</xPosition>
+        <yPosition>13</yPosition>
+        <initialAmount>0</initialAmount>
+        <amountRemaining>400</amountRemaining>
     </resourceNode>
     <resourceNode>
         <ID>7</ID>
@@ -819,6 +843,6 @@
         <xPosition>12</xPosition>
         <yPosition>4</yPosition>
         <initialAmount>0</initialAmount>
-        <amountRemaining>100</amountRemaining>
+        <amountRemaining>400</amountRemaining>
     </resourceNode>
 </state>

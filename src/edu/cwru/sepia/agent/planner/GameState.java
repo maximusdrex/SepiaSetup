@@ -1,6 +1,6 @@
 package edu.cwru.sepia.agent.planner;
 
-import edu.cwru.sepia.agent.planner.actions.StripsAction;
+import edu.cwru.sepia.agent.planner.kactions.StripsKAction;
 import edu.cwru.sepia.environment.model.state.State;
 
 import java.util.List;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 public class GameState implements Comparable<GameState> {
 
     private GameState parent;
-    private StripsAction action;
+    private StripsKAction action;
     public StateRepresentation representation;
 
     /**
@@ -60,7 +60,7 @@ public class GameState implements Comparable<GameState> {
         this.representation = new StateRepresentation(state, playernum, requiredGold, requiredWood, buildPeasants);
     }
 
-    public GameState(GameState parent, StripsAction action) {
+    public GameState(GameState parent, StripsKAction action) {
         this.parent = parent;
         this.action = action;
         this.representation = new StateRepresentation(parent.representation);
@@ -91,7 +91,12 @@ public class GameState implements Comparable<GameState> {
         // Then generate any possible deposits
 
         // For all StripsActions apply them to get the new game states
-        List<GameState> children = representation.generateActions().stream().map(action -> action.apply(this)).collect(Collectors.toList());
+        // Also check to make sure their preconditions are met
+        List<GameState> children = representation.generateActions()
+            .stream()
+            .filter(action -> action.preconditionsMet(this))
+            .map(action -> action.apply(this))
+            .collect(Collectors.toList());
         return children;
     }
 
@@ -105,14 +110,25 @@ public class GameState implements Comparable<GameState> {
      * @return The value estimated remaining cost to reach a goal state from this state.
      */
     public double heuristic() {
+        double resource_mult = 5.0;
+        double gathered_mult = 1.0;
+        double peasant_mult = 5.0;
         double h = 3.0;
         if (representation.requiredGold - representation.collectedGold > 0) {
-            h += representation.requiredGold - representation.collectedGold;
+            h += resource_mult * (representation.requiredGold - representation.collectedGold);
         }
         if (representation.requiredWood - representation.collectedWood > 0) {
-            h += representation.requiredWood - representation.collectedWood;
+            h += resource_mult * (representation.requiredWood - representation.collectedWood);
         }
-        h -= representation.peasants.size();
+
+        // Incentivise resource gathering
+        if (representation.requiredGold - representation.collectedGold > 0) {
+            h -= gathered_mult * (representation.getGatheredGold());
+        }
+        if (representation.requiredWood - representation.collectedWood > 0) {
+            h -= gathered_mult * (representation.getGatheredWood());
+        }
+        h -= peasant_mult * (representation.peasants.size());
         return h;
     }
 
@@ -179,7 +195,7 @@ public class GameState implements Comparable<GameState> {
      * This returns the state's parent
      * @return StripsAction action
      */
-    public StripsAction getAction() {
+    public StripsKAction getAction() {
         return this.action;
     }
 

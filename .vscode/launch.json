@@ -5,7 +5,7 @@
             "name": "AgentConfig",
             "request": "launch",
             "mainClass": "edu.cwru.sepia.Main2",
-            "args": "data/GameConfig2fv2a.xml",
+            "args": "data/midasSmallconfig.xml",
             "classPaths": ["${workspaceFolder}/lib/Sepia.jar", "${workspaceFolder}/bin", "${workspaceFolder}/src"]
         }
     ]

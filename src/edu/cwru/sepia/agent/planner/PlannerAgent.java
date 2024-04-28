@@ -2,7 +2,7 @@ package edu.cwru.sepia.agent.planner;
 
 import edu.cwru.sepia.action.Action;
 import edu.cwru.sepia.agent.Agent;
-import edu.cwru.sepia.agent.planner.actions.StripsAction;
+import edu.cwru.sepia.agent.planner.kactions.StripsKAction;
 import edu.cwru.sepia.environment.model.history.History;
 import edu.cwru.sepia.environment.model.state.State;
 
@@ -41,7 +41,7 @@ public class PlannerAgent extends Agent {
         Position.x_extent = stateView.getXExtent();
         Position.y_extent = stateView.getYExtent();
 
-        Stack<StripsAction> plan = AstarSearch(new GameState(stateView, playernum, requiredGold, requiredWood, buildPeasants));
+        Stack<StripsKAction> plan = AstarSearch(new GameState(stateView, playernum, requiredGold, requiredWood, buildPeasants));
 
         if(plan == null) {
             System.err.println("No plan was found");
@@ -92,7 +92,7 @@ public class PlannerAgent extends Agent {
      * @param startState The state which is being planned from
      * @return The plan or null if no plan is found.
      */
-    private Stack<StripsAction> AstarSearch(GameState startState) {
+    private Stack<StripsKAction> AstarSearch(GameState startState) {
 
         Set<GameState> openList = new HashSet<GameState>();
         Set<GameState> closedList = new HashSet<GameState>();
@@ -113,8 +113,6 @@ public class PlannerAgent extends Agent {
                 }
             }
 
-            System.out.println(currentNode.heuristic());
-
             //pop that node from the open set and add it to the closed set
             openList.remove(currentNode);
             closedList.add(currentNode);
@@ -133,8 +131,8 @@ public class PlannerAgent extends Agent {
         return null;
     }
 
-    private Stack<StripsAction> backtrackGoal(GameState goal_node) {
-        Stack<StripsAction> path = new Stack<StripsAction>();
+    private Stack<StripsKAction> backtrackGoal(GameState goal_node) {
+        Stack<StripsKAction> path = new Stack<StripsKAction>();
         GameState currentNode = goal_node;
         do {
             path.add(currentNode.getAction());
@@ -146,14 +144,14 @@ public class PlannerAgent extends Agent {
 
     /**
      * This has been provided for you. Each strips action is converted to a string with the toString method. This means
-     * each class implementing the StripsAction interface should override toString. Your strips actions should have a
+     * each class implementing the StripsKAction interface should override toString. Your strips actions should have a
      * form matching your included Strips definition writeup. That is <action name>(<param1>, ...). So for instance the
      * move action might have the form of Move(peasantID, X, Y) and when grounded and written to the file
      * Move(1, 10, 15).
      *
      * @param plan Stack of Strips Actions that are written to the text file.
      */
-    private void savePlan(Stack<StripsAction> plan) {
+    private void savePlan(Stack<StripsKAction> plan) {
         if (plan == null) {
             System.err.println("Cannot save null plan");
             return;
@@ -170,7 +168,7 @@ public class PlannerAgent extends Agent {
 
             outputWriter = new PrintWriter(outputFile.getAbsolutePath());
 
-            Stack<StripsAction> tempPlan = (Stack<StripsAction>) plan.clone();
+            Stack<StripsKAction> tempPlan = (Stack<StripsKAction>) plan.clone();
             while(!tempPlan.isEmpty()) {
                 outputWriter.println(tempPlan.pop().toString());
             }
