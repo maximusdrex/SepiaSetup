@@ -110,12 +110,15 @@ public class GameState implements Comparable<GameState> {
      * @return The value estimated remaining cost to reach a goal state from this state.
      */
     public double heuristic() {
-        double resource_mult = 5.0;
-        double gathered_mult = 1.0;
-        double peasant_mult = 5.0;
+        double resource_mult = 2000.0;
+        double gathered_mult = 500.0;
+        double gold_mult = 1.0;
+        double peasant_mult = 2.0;
+        double r_dist_mult = 0.5;
+        double t_dist_mult = 0.25;
         double h = 3.0;
         if (representation.requiredGold - representation.collectedGold > 0) {
-            h += resource_mult * (representation.requiredGold - representation.collectedGold);
+            h += gold_mult * resource_mult * (representation.requiredGold - representation.collectedGold);
         }
         if (representation.requiredWood - representation.collectedWood > 0) {
             h += resource_mult * (representation.requiredWood - representation.collectedWood);
@@ -128,7 +131,14 @@ public class GameState implements Comparable<GameState> {
         if (representation.requiredWood - representation.collectedWood > 0) {
             h -= gathered_mult * (representation.getGatheredWood());
         }
-        h -= peasant_mult * (representation.peasants.size());
+        h -= peasant_mult * (representation.peasants.size() - 1) * (400 * resource_mult);
+
+        // Incentivise moving towards a reasonable goal
+        if (representation.getGatheredResources() > 0) {
+            h -= t_dist_mult * representation.averageDistanceToTownHall();
+        } else {
+            h -= r_dist_mult * representation.averageDistanceToClosestResource();
+        }
         return h;
     }
 

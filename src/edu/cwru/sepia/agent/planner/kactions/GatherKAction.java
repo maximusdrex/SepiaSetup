@@ -2,6 +2,7 @@ package edu.cwru.sepia.agent.planner.kactions;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,6 +31,23 @@ public class GatherKAction implements StripsKAction {
         }
         for(Entry<Integer, Integer> entry : this.p2r.entrySet()) {
             Peasant p = state.representation.getPeasantByID(entry.getKey());
+            if(p.currentCargo > 0) {
+                return false;
+            } else if (!p.getPosition().isAdjacent(state.representation.getResourceByID(entry.getValue()).getPosition())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean preconditionsMetExecution(GameState state, Map<Integer, Integer> idMap) {
+        // The following expression returns true if all destination resources are adjacent
+        // and each peasant is carrying nothing
+        if (state.representation.peasants.size() < p2r.size()) {
+            return false;
+        }
+        for(Entry<Integer, Integer> entry : this.p2r.entrySet()) {
+            Peasant p = state.representation.getPeasantByID(idMap.get(entry.getKey()));
             if(p.currentCargo > 0) {
                 return false;
             } else if (!p.getPosition().isAdjacent(state.representation.getResourceByID(entry.getValue()).getPosition())) {
@@ -71,8 +89,13 @@ public class GatherKAction implements StripsKAction {
         return new_state;
     }
 
-    public Map<Integer, Action> createSepiaAction(List<Integer> peasantIDs) {
-        return null;
+    public Map<Integer, Action> createSepiaAction(Map<Integer, Integer> peasantIdMap) {
+        Map<Integer, Action> actionsMap = new HashMap<Integer, Action>();
+        for(Entry<Integer, Integer> e : this.p2r.entrySet()) {
+            actionsMap.put(peasantIdMap.get(e.getKey()),
+                Action.createCompoundGather(peasantIdMap.get(e.getKey()), e.getValue()));
+        }
+        return actionsMap;
     }
 
     public List<Integer> getIds() {
@@ -84,4 +107,7 @@ public class GatherKAction implements StripsKAction {
         return true;
     }
 
+    public String toString() {
+        return "GatherKAction, k=" + Integer.toString(this.p2r.size());
+    }
 }

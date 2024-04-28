@@ -11,6 +11,9 @@ public interface StripsKAction {
     
     public boolean preconditionsMet(GameState state);
 
+    // Make sure preconditions are met during execution when ids may not line up with the planner-generated ids
+    public boolean preconditionsMetExecution(GameState state, Map<Integer, Integer> idMap);
+
     /**
      * Applies the action instance to the given GameState producing a new GameState in the process.
      *
@@ -25,7 +28,7 @@ public interface StripsKAction {
      */
     public GameState apply(GameState state);
 
-    public Map<Integer, Action> createSepiaAction(List<Integer> peasantIDs);
+    public Map<Integer, Action> createSepiaAction(Map<Integer, Integer> peasantIdMap);
 
     public List<Integer> getIds();
 

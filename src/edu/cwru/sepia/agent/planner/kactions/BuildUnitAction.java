@@ -21,6 +21,10 @@ public class BuildUnitAction implements StripsKAction {
         return state.representation.buildPeasants && state.representation.collectedGold >= 400 && state.representation.supply_left > 0;
     }
 
+    public boolean preconditionsMetExecution(GameState state, Map<Integer, Integer> idMap) {
+        return state.representation.buildPeasants && state.representation.collectedGold >= 400 && state.representation.supply_left > 0;
+    }
+
     public GameState apply(GameState state) {
         GameState new_state = new GameState(state, this);
 
@@ -34,8 +38,8 @@ public class BuildUnitAction implements StripsKAction {
         return new_state;
     }
 
-    public Map<Integer, Action> createSepiaAction(List<Integer> townhall_id) {
-        Action a = Action.createCompoundProduction(t_id, Peasant.templateId);
+    public Map<Integer, Action> createSepiaAction(Map<Integer, Integer> peasantIdMap) {
+        Action a = Action.createCompoundProduction(this.t_id, Peasant.templateId);
         Map<Integer, Action> m = new HashMap<Integer, Action>();
         m.put(this.t_id, a);
         return m;

@@ -49,8 +49,8 @@ public class StateRepresentation {
         // This assumes there is one and only one town hall
         this.townHall = state.getAllUnits().stream().filter(x -> x.getTemplateView().getName().equals("TownHall")).map(x -> new TownHall(x)).collect(Collectors.toList()).get(0);
 
-        this.collectedGold = 0;
-        this.collectedWood = 0;
+        this.collectedGold = state.getResourceAmount(playernum, ResourceType.GOLD);
+        this.collectedWood = state.getResourceAmount(playernum, ResourceType.WOOD);
 
         this.playerNum = playernum;
         this.requiredGold = requiredGold;
@@ -191,7 +191,11 @@ public class StateRepresentation {
     }
 
     public Position generateResourcePos(Peasant p, ResourceType t, List<Position> filled_positions) {
-        Position resource_pos = closestResource(p, t).getPosition();
+        ResourceState r = closestResource(p, t);
+        if (r == null) {
+            return null;
+        }
+        Position resource_pos = r.getPosition();
         // Don't add the same positions as another peasant
         List<Position> fullList = new ArrayList<Position>(getAllObjectPositions());
         fullList.addAll(filled_positions);
@@ -241,7 +245,7 @@ public class StateRepresentation {
 
         Map<Integer, Integer> peasant2resource = new HashMap<Integer, Integer>();
         for (Peasant p : this.peasants) {
-            if (p.currentCargo == 0 && p.getPosition().isAdjacent(this.townHall.getPosition())) {
+            if (p.currentCargo > 0 && p.getPosition().isAdjacent(this.townHall.getPosition())) {
                 peasant2resource.put(p.getID(), this.townHall.getID());
             }
         }
@@ -284,6 +288,19 @@ public class StateRepresentation {
 
     public int getGatheredWood() {
         return this.peasants.stream().filter(x -> x.cargoType == ResourceType.WOOD).mapToInt(x -> x.currentCargo).sum();
+    }
+
+    public int getGatheredResources() {
+        return this.getGatheredGold() + this.getGatheredWood();
+    }
+
+    public double averageDistanceToClosestResource() {
+        List<Position> rs = this.resources.stream().map(x -> x.getPosition()).collect(Collectors.toList());
+        return this.peasants.stream().mapToDouble(p -> p.getPosition().euclideanDistance(getClosest(p.getPosition(), rs))).average().orElse(0.0);
+    }
+
+    public double averageDistanceToTownHall() {
+        return this.peasants.stream().mapToDouble(p -> p.getPosition().euclideanDistance(this.townHall.getPosition())).average().orElse(0.0);
     }
 
 

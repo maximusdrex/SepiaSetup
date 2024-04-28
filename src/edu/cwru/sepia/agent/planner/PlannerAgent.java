@@ -54,7 +54,7 @@ public class PlannerAgent extends Agent {
 
 
         // Instantiates the PEAgent with the specified plan.
-        peAgent = new PEAgent(playernum, plan);
+        peAgent = new PEAgent(playernum, plan, buildPeasants);
 
         return peAgent.initialStep(stateView, historyView);
     }
@@ -108,8 +108,14 @@ public class PlannerAgent extends Agent {
 
             //get the node in the openList with the least f val
             for (GameState gameNode : openList) {
-                if (currentNode == null || gameNode.heuristic() < currentNode.heuristic()) {
+                if(currentNode == null) {
                     currentNode = gameNode;
+                } else{
+                    double gameNodeF = gameNode.getCost() + gameNode.heuristic();
+                    double currentNodeF = currentNode.getCost() + currentNode.heuristic();
+                    if (gameNodeF < currentNodeF) {
+                        currentNode = gameNode;
+                    }
                 }
             }
 

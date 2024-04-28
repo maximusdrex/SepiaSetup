@@ -1,80 +1,146 @@
-CompoundMoveAction: peasantId 1, dest (5, 11)
-ResourceGatherAction: peasantId 1, dest 5
-CompoundMoveAction: peasantId 1, dest (7, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (5, 11)
-ResourceGatherAction: peasantId 1, dest 5
-CompoundMoveAction: peasantId 1, dest (7, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (5, 11)
-ResourceGatherAction: peasantId 1, dest 5
-CompoundMoveAction: peasantId 1, dest (7, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (5, 8)
-ResourceGatherAction: peasantId 1, dest 2
-CompoundMoveAction: peasantId 1, dest (7, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (14, 4)
-ResourceGatherAction: peasantId 1, dest 3
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (11, 5)
-ResourceGatherAction: peasantId 1, dest 9
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (14, 4)
-ResourceGatherAction: peasantId 1, dest 3
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (11, 5)
-ResourceGatherAction: peasantId 1, dest 9
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (11, 5)
-ResourceGatherAction: peasantId 1, dest 9
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (11, 5)
-ResourceGatherAction: peasantId 1, dest 9
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (11, 12)
-ResourceGatherAction: peasantId 1, dest 6
-CompoundMoveAction: peasantId 1, dest (9, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (14, 4)
-ResourceGatherAction: peasantId 1, dest 3
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (11, 12)
-ResourceGatherAction: peasantId 1, dest 6
-CompoundMoveAction: peasantId 1, dest (9, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (14, 4)
-ResourceGatherAction: peasantId 1, dest 3
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (11, 12)
-ResourceGatherAction: peasantId 1, dest 6
-CompoundMoveAction: peasantId 1, dest (9, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (14, 4)
-ResourceGatherAction: peasantId 1, dest 3
-CompoundMoveAction: peasantId 1, dest (9, 8)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (21, 15)
-ResourceGatherAction: peasantId 1, dest 4
-CompoundMoveAction: peasantId 1, dest (9, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (21, 15)
-ResourceGatherAction: peasantId 1, dest 4
-CompoundMoveAction: peasantId 1, dest (9, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (21, 15)
-ResourceGatherAction: peasantId 1, dest 4
-CompoundMoveAction: peasantId 1, dest (9, 10)
-ResourceDepositAction: peasantId 1, dest 0
-CompoundMoveAction: peasantId 1, dest (21, 15)
-ResourceGatherAction: peasantId 1, dest 4
-CompoundMoveAction: peasantId 1, dest (9, 10)
-ResourceDepositAction: peasantId 1, dest 0
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+MoveKAction, k=1
+GatherKAction, k=1
+MoveKAction, k=1
+DepositKAction, k=1
+BuildAction: townhall #0
+MoveKAction, k=2
+GatherKAction, k=2
+MoveKAction, k=2
+DepositKAction, k=2
+MoveKAction, k=2
+GatherKAction, k=2
+MoveKAction, k=2
+DepositKAction, k=2
+BuildAction: townhall #0
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3
+MoveKAction, k=3
+GatherKAction, k=3
+MoveKAction, k=3
+DepositKAction, k=3

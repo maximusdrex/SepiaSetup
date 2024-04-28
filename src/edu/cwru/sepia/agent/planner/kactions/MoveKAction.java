@@ -2,6 +2,7 @@ package edu.cwru.sepia.agent.planner.kactions;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,6 +35,10 @@ public class MoveKAction implements StripsKAction {
             .allMatch(pos -> state.representation.getUnitAtPos(pos) == null);
     }
 
+    public boolean preconditionsMetExecution(GameState state, Map<Integer, Integer> idMap) {
+        return preconditionsMet(state);
+    }
+
     public GameState apply(GameState state) {
         GameState new_state = new GameState(state, this);
         List<Double> costs = new ArrayList<Double>();
@@ -51,8 +56,13 @@ public class MoveKAction implements StripsKAction {
         return new_state;
     }
 
-    public Map<Integer, Action> createSepiaAction(List<Integer> peasantIDs) {
-        return null;
+    public Map<Integer, Action> createSepiaAction(Map<Integer, Integer> peasantIdMap) {
+        Map<Integer, Action> actionsMap = new HashMap<Integer, Action>();
+        for(Entry<Integer, Position> e : this.dests.entrySet()) {
+            actionsMap.put(peasantIdMap.get(e.getKey()),
+                Action.createCompoundMove(peasantIdMap.get(e.getKey()), e.getValue().x, e.getValue().y));
+        }
+        return actionsMap;
     }
 
     public List<Integer> getIds() {

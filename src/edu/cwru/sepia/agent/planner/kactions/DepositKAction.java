@@ -2,6 +2,7 @@ package edu.cwru.sepia.agent.planner.kactions;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,6 +41,23 @@ public class DepositKAction implements StripsKAction {
         return true;
     }
 
+    public boolean preconditionsMetExecution(GameState state, Map<Integer, Integer> idMap) {
+        // The following expression returns true if all destination resources are adjacent
+        // and each peasant is carrying nothing
+        if (state.representation.peasants.size() < p2t.size()) {
+            return false;
+        }
+        for(Entry<Integer, Integer> entry : this.p2t.entrySet()) {
+            Peasant p = state.representation.getPeasantByID(idMap.get(entry.getKey()));
+            if(p.currentCargo == 0) {
+                return false;
+            } else if (!p.getPosition().isAdjacent(state.representation.getTownHall().getPosition())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public GameState apply(GameState state) {
         GameState new_state = new GameState(state, this);
         List<Double> costs = new ArrayList<Double>();
@@ -63,8 +81,13 @@ public class DepositKAction implements StripsKAction {
         return new_state;
     }
 
-    public Map<Integer, Action> createSepiaAction(List<Integer> peasantIDs) {
-        return null;
+    public Map<Integer, Action> createSepiaAction(Map<Integer, Integer> peasantIdMap) {
+        Map<Integer, Action> actionsMap = new HashMap<Integer, Action>();
+        for(Entry<Integer, Integer> e : this.p2t.entrySet()) {
+            actionsMap.put(peasantIdMap.get(e.getKey()),
+                Action.createCompoundDeposit(peasantIdMap.get(e.getKey()), e.getValue()));
+        }
+        return actionsMap;
     }
 
     public List<Integer> getIds() {
@@ -74,6 +97,10 @@ public class DepositKAction implements StripsKAction {
 
     public boolean peasantAction() {
         return true;
+    }
+
+    public String toString() {
+        return "DepositKAction, k=" + Integer.toString(this.p2t.size());
     }
 
 }
