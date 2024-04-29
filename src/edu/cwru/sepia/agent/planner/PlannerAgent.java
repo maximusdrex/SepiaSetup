@@ -112,7 +112,9 @@ public class PlannerAgent extends Agent {
                     currentNode = gameNode;
                 } else{
                     double gameNodeF = gameNode.getCost() + gameNode.heuristic();
+                    double gameNodeH = gameNode.heuristic();
                     double currentNodeF = currentNode.getCost() + currentNode.heuristic();
+                    double currentH = currentNode.heuristic();
                     if (gameNodeF < currentNodeF) {
                         currentNode = gameNode;
                     }

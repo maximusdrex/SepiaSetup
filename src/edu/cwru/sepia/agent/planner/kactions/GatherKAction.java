@@ -60,13 +60,21 @@ public class GatherKAction implements StripsKAction {
     public GameState apply(GameState state) {
         GameState new_state = new GameState(state, this);
         List<Double> costs = new ArrayList<Double>();
+        ResourceType t = null;
+        List<Integer> undefined_actions = new ArrayList<Integer>();
 
         for(Entry<Integer, Integer> entry : this.p2r.entrySet()) {
             Peasant unit = new_state.representation.getPeasantByID(entry.getKey());
             ResourceState r = new_state.representation.getResourceByID(entry.getValue());
-    
-            ResourceType t = r.nodeType;
-            double approx_cost = Peasant.gatherCost.get(t);
+            if (r != null) {
+                t = r.nodeType;
+            } else {
+                undefined_actions.add(entry.getKey());
+                break;
+            }
+            
+            //double approx_cost = Peasant.gatherCost.get(t);
+            double approx_cost = 1;
     
             unit.cargoType = t;
             if(r.amountRemaining >= 100) {
@@ -82,6 +90,11 @@ public class GatherKAction implements StripsKAction {
             }
 
             costs.add(approx_cost);
+        }
+
+        for(Integer i : undefined_actions) {
+            // Don't do actions for any units after the resource is empty
+            this.p2r.remove(i);
         }
 
         // Since they execute in parallel, the cost is the longest one to execute

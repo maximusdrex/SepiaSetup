@@ -45,7 +45,8 @@ public class MoveKAction implements StripsKAction {
 
         for(Entry<Integer, Position> entry : this.dests.entrySet()) {
             Peasant unit = new_state.representation.getPeasantByID(entry.getKey());
-            double approx_cost = unit.getPosition().euclideanDistance(entry.getValue()) * Peasant.moveCost;
+            //double approx_cost = unit.getPosition().euclideanDistance(entry.getValue()) * Peasant.moveCost;
+            double approx_cost = 1;
 
             unit.setPosition(entry.getValue());
             costs.add(approx_cost);

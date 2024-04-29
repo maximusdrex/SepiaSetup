@@ -299,6 +299,11 @@ public class StateRepresentation {
         return this.peasants.stream().mapToDouble(p -> p.getPosition().euclideanDistance(getClosest(p.getPosition(), rs))).average().orElse(0.0);
     }
 
+    public double averageDistanceToClosestResourceType(ResourceType t) {
+        List<Position> rs = this.resources.stream().filter(x -> x.nodeType == t).map(x -> x.getPosition()).collect(Collectors.toList());
+        return this.peasants.stream().mapToDouble(p -> p.getPosition().euclideanDistance(getClosest(p.getPosition(), rs))).average().orElse(0.0);
+    }
+
     public double averageDistanceToTownHall() {
         return this.peasants.stream().mapToDouble(p -> p.getPosition().euclideanDistance(this.townHall.getPosition())).average().orElse(0.0);
     }

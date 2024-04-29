@@ -64,7 +64,8 @@ public class DepositKAction implements StripsKAction {
 
         for(Entry<Integer, Integer> entry : this.p2t.entrySet()) {
             Peasant unit = new_state.representation.getPeasantByID(entry.getKey());
-            double approx_cost = Peasant.depositCost;
+            //double approx_cost = Peasant.depositCost;
+            double approx_cost = 1;
     
             if(unit.cargoType == ResourceType.GOLD) {
                 new_state.representation.collectedGold += unit.currentCargo;
